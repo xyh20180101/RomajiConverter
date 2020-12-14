@@ -1,3 +1,5 @@
 .vs/
 *.user
 RomajiConverter/obj/
+RomajiConverter/unidic.zip
+RomajiConverter/bin/

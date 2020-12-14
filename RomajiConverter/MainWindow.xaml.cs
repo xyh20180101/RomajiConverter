@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AduSkin.Controls.Metro;
+using AduSkin.Themes;
 using RomajiConverter.Helper;
 
 namespace RomajiConverter
@@ -26,8 +27,18 @@ namespace RomajiConverter
         {
             InitializeComponent();
             KuromojiHelper.Init();
-            var result = RomajiHelper.ToRomaji("陽炎がゆらゆら揺れてる");
-            var a = 0;
+            BorderBrush = new SolidColorBrush(Color.FromRgb(255, 102, 102));
+        }
+
+        private void ConvertButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = RomajiHelper.ToRomaji(InputTextBox.Text);
+            var output = new StringBuilder();
+            foreach (var item in result)
+            {
+                output.AppendLine(item.Romaji);
+            }
+            OutputTextBox.Text = output.ToString();
         }
     }
 }

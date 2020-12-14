@@ -6,8 +6,27 @@
                      xmlns:local="clr-namespace:RomajiConverter"
                      xmlns:AduSkin="clr-namespace:AduSkin.Controls.Metro;assembly=AduSkin"
                      mc:Ignorable="d"
-                     Title="RomajiConverter" Height="450" Width="800">
+                     Title="RomajiConverter" MinWidth="800" MinHeight="500" Width="800" Height="500" Icon="/favicon.ico" BorderThickness="0" WindowStyle="None">
     <Grid>
-        <AduSkin:AduFlatButton Content="按钮" Width="50" Height="20"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40px"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <AduSkin:AduFlatButton Grid.Row="0" Grid.Column="0" Content="从网易云音乐导入" Width="120" Height="30" HorizontalAlignment="Left" Margin="5,0,0,0" Background="#FFFF6666"/>
+        <AduSkin:AduFlatButton Grid.Row="0" Grid.Column="0" Content="清空" Width="60" Height="30" HorizontalAlignment="Left" Margin="130,0,0,0" Background="White" Foreground="#FF404040"/>
+        <AduSkin:AduFlatButton x:Name="ConvertButton" Grid.Row="0" Grid.Column="0" Content="转换" Width="60" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="#FFFF6666" Click="ConvertButton_Click"/>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <AduSkin:AduCheckBox IsChecked="True" Cursor="Hand" Foreground="#FFFF6666" Content="空格分隔"></AduSkin:AduCheckBox>
+            <AduSkin:AduCheckBox IsChecked="True" Cursor="Hand" Foreground="#FFFF6666" Content="每句换行"></AduSkin:AduCheckBox>
+            <AduSkin:AduCheckBox IsChecked="True" Cursor="Hand" Foreground="#FFFF6666" Content="罗马音"></AduSkin:AduCheckBox>
+            <AduSkin:AduCheckBox IsChecked="True" Cursor="Hand" Foreground="#FFFF6666" Content="日文"></AduSkin:AduCheckBox>
+            <AduSkin:AduCheckBox IsChecked="True" Cursor="Hand" Foreground="#FFFF6666" Content="中文"></AduSkin:AduCheckBox>
+        </StackPanel>
+        <AduSkin:MetroTextBox x:Name="InputTextBox" Grid.Row="1" Grid.Column="0" Margin="5,0,3,5" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" MultipleLine="True"></AduSkin:MetroTextBox>
+        <AduSkin:MetroTextBox x:Name="OutputTextBox" Grid.Row="1" Grid.Column="1" Margin="3,0,5,5" VerticalScrollBarVisibility="Visible" MultipleLine="True"></AduSkin:MetroTextBox>
     </Grid>
 </AduSkin:MetroWindow>

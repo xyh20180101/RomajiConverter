@@ -4,7 +4,12 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="favicon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AduSkin" Version="1.1.1.8" />
@@ -15,6 +20,10 @@
     <Reference Include="Kuromoji.NET">
       <HintPath>Kuromoji.NET.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="favicon.ico" />
   </ItemGroup>
 
 </Project>
