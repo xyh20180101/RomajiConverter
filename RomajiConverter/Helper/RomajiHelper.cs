@@ -8,14 +8,11 @@ namespace RomajiConverter.Helper
 {
     public static class RomajiHelper
     {
-        public static List<ReturnText> ToRomaji(string text, float chineseRate = 0.51f, bool isSpace = true)
+        public static List<ReturnText> ToRomaji(string text, bool isSpace = true, float chineseRate = 0.51f)
         {
             try
             {
-                var newLine = "\r\n";
-                var newLineCharArray = newLine.ToCharArray();
-
-                var lineTextList = text.Split(newLineCharArray, StringSplitOptions.RemoveEmptyEntries);
+                var lineTextList = text.RemoveEmptyLine().Split(Environment.NewLine);
 
                 var returnList = new List<ReturnText>();
 
