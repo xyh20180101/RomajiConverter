@@ -15,7 +15,7 @@ namespace RomajiConverter.Helper
         {
             var dictionaryPath = Environment.CurrentDirectory+"\\unidic.zip";
 			_tokenizer = new Tokenizer(dictionaryPath);
-		}
+        }
 
 		/// <summary>
 		/// 转换为片假名
@@ -23,7 +23,7 @@ namespace RomajiConverter.Helper
 		/// <returns></returns>
 		public static string ToKatakana(string input)
 		{
-			return _tokenizer.Tokenize(input).Aggregate("", (current, token) => current + token.LemmaReadingForm);
+            return _tokenizer.Tokenize(input).Aggregate("", (current, token) => current + token.LemmaReadingForm);
 		}
 	}
 }

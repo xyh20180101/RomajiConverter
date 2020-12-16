@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,6 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -26,7 +26,7 @@ namespace RomajiConverter
     {
         public MainWindow()
         {
-            BorderBrush = new SolidColorBrush(Color.FromRgb(255, 102, 102));
+            BorderBrush = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(Application.Current.Resources["DefaultBrush"].ToString()));
             InitializeComponent();
             KuromojiHelper.Init();
             CloudMusicHelper.Init();
@@ -44,7 +44,6 @@ namespace RomajiConverter
 
         private async void ImportCloudMusicButton_Click(object sender, RoutedEventArgs e)
         {
-            throw new Exception("测试");
             var result = await CloudMusicHelper.GetLrc(CloudMusicHelper.GetLastSongId());
             var stringBuilder = new StringBuilder();
             foreach (var item in result)
@@ -70,17 +69,19 @@ namespace RomajiConverter
         {
             var result = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked));
             var output = new StringBuilder();
-            foreach (var item in result)
+            for (var i = 0; i < result.Count; i++)
             {
+                var item = result[i];
                 if (GetBool(RomajiCheckBox.IsChecked))
                     output.AppendLine(item.Romaji);
                 if (GetBool(JPCheckBox.IsChecked))
                     output.AppendLine(item.Japanese);
                 if (GetBool(CHCheckBox.IsChecked) && !string.IsNullOrWhiteSpace(item.Chinese))
                     output.AppendLine(item.Chinese);
-                if (GetBool(NewLineCheckBox.IsChecked))
+                if (GetBool(NewLineCheckBox.IsChecked) && i < result.Count - 1)
                     output.AppendLine();
             }
+            output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
             OutputTextBox.Text = output.ToString();
         }
 
@@ -102,5 +103,11 @@ namespace RomajiConverter
         }
 
         #endregion
+
+        private void MetroTitleMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new SettingsWindow();
+            settingsWindow.Show();
+        }
     }
 }

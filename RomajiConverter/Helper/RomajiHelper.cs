@@ -8,7 +8,7 @@ namespace RomajiConverter.Helper
 {
     public static class RomajiHelper
     {
-        public static List<ReturnText> ToRomaji(string text, bool isSpace = true, float chineseRate = 0.51f)
+        public static List<ReturnText> ToRomaji(string text, bool isSpace = true, float chineseRate = 1f)
         {
             try
             {
@@ -121,6 +121,9 @@ namespace RomajiConverter.Helper
         {
             if (rate > 1 || rate < 0)
                 throw new Exception("容错率超出范围");
+
+            if (str.Length < 2)
+                return false;
 
             var wordArray = str.ToCharArray();
 
