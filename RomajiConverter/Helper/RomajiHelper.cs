@@ -1,5 +1,11 @@
-﻿using System;
+﻿using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Ja;
+using Lucene.Net.Analysis.Ja.TokenAttributes;
+using Lucene.Net.Analysis.TokenAttributes;
+using MeCab;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using WanaKanaSharp;
@@ -29,7 +35,7 @@ namespace RomajiConverter.Helper
                     }
 
                     returnText.Japanese = line;
-                    returnText.Romaji = SingleLineToRomaji(line, isSpace);
+                    returnText.Romaji = UnitToRomaji(line, isSpace);
                     if (index + 1 < lineTextList.Length &&
                         IsChinese(lineTextList[index + 1], chineseRate))
                     {
@@ -46,69 +52,6 @@ namespace RomajiConverter.Helper
             {
                 return new List<ReturnText>();
             }
-        }
-
-        /// <summary>
-        ///		单行文本转换为罗马音
-        /// </summary>
-        /// <param name="str">文本</param>
-        /// <param name="isSpace">是否以空格分隔</param>
-        /// <returns></returns>
-        public static string SingleLineToRomaji(string str, bool isSpace)
-        {
-            var result = "";
-
-            result += UnitToRomaji(str, isSpace);
-
-            return result;
-        }
-
-        /// <summary>
-        ///		文本转换为罗马音
-        /// </summary>
-        /// <param name="str">一个单元文本(空格之间)</param>
-        /// <param name="isSpace">是否以空格分隔</param>
-        /// <returns></returns>
-        public static string UnitToRomaji(string str, bool isSpace)
-        {
-            var list = KuromojiHelper._tokenizer.Tokenize(str);
-
-            var a = KuromojiHelper._tokenizer.MultiTokenizeNBest(str, 1);
-
-            var result = "";
-
-            foreach (var item in list)
-            {
-                var space = isSpace ? " " : "";
-                if (item.LanguageType == "記号" || item.LanguageType == "*" || item.PartOfSpeechLevel1 == "空白")
-                {
-                    result += item.Surface;
-                }
-                else if (item.LanguageType == "外" && !WanaKana.IsJapanese(item.Surface))
-                {
-                    result += item.Surface;
-                }
-                else if (item.Surface == "私")
-                {
-                    result += "watashi" + space;
-                }
-                else
-                {
-                    result += WanaKana.ToRomaji(item.Pronunciation) + space;
-                }
-            }
-
-            if (result.LastIndexOf(' ') == -1)
-            {
-                return result;
-            }
-
-            if (result.LastIndexOf(' ') == result.Length - 1)
-            {
-                result = result.Substring(0, result.Length - 1);
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -172,6 +115,74 @@ namespace RomajiConverter.Helper
             if (chCount == 0) return false;//一个简体中文都没有
 
             return (chCount + enCount) / total >= rate;
+        }
+
+        public static string GetPronunciation(string str)
+        {
+            var result = new StringBuilder();
+            using (var sr = new StringReader(str))
+            {
+                Tokenizer tokenizer = new JapaneseTokenizer(sr, null, true, JapaneseTokenizerMode.NORMAL);
+                using (var tokenStream = new TokenStreamComponents(tokenizer, tokenizer).TokenStream)
+                {
+                    tokenStream.Reset();
+                    while (tokenStream.IncrementToken())
+                    {
+                        result.Append(tokenStream.GetAttribute<IReadingAttribute>().GetPronunciation());
+                    }
+                }
+            }
+
+            return result.ToString();
+        }
+
+        public static string UnitToRomaji(string str, bool isSpace)
+        {
+            var parameter = new MeCabParam
+            {
+                LatticeLevel = MeCabLatticeLevel.Two
+            };
+            var tagger = MeCabTagger.Create(parameter);
+            var list = tagger.ParseToNodes(str);
+
+            var result = "";
+
+            foreach (var item in list)
+            {
+                var space = (isSpace &&(item.Next?.Feature?.Split(',')[0]?? "記号") != "記号") ? " " : "";
+                if (item.CharType > 0)
+                {
+                    var features = item.Feature.Split(',');
+                    if (features[0] == "記号")
+                    {
+                        result += item.Surface;
+                    }
+                    else if (features[6] == "*")
+                    {
+                        result += item.Surface;
+                    }
+                    else
+                    {
+                        result += WanaKana.ToRomaji(features[8]) + space;
+                    }
+                }
+                else if (item.Stat!=MeCabNodeStat.Bos)
+                {
+                    result += item.Surface + space;
+                }
+            }
+
+            if (result.LastIndexOf(' ') == -1)
+            {
+                return result;
+            }
+
+            if (result.LastIndexOf(' ') == result.Length - 1)
+            {
+                result = result.Substring(0, result.Length - 1);
+            }
+
+            return result;
         }
     }
 

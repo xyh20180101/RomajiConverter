@@ -28,7 +28,6 @@ namespace RomajiConverter
         {
             BorderBrush = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(Application.Current.Resources["DefaultBrush"].ToString()));
             InitializeComponent();
-            KuromojiHelper.Init();
             CloudMusicHelper.Init();
             SpaceCheckBox.Checked += CheckBox_Checked;
             SpaceCheckBox.Unchecked += CheckBox_Unchecked;
@@ -106,8 +105,6 @@ namespace RomajiConverter
 
         private void MetroTitleMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var settingsWindow = new SettingsWindow();
-            settingsWindow.Show();
         }
     }
 }
