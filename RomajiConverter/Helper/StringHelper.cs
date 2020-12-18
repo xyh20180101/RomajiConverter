@@ -13,5 +13,10 @@ namespace RomajiConverter.Helper
             strArray = strArray.Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
             return string.Join(Environment.NewLine, strArray);
         }
+
+        public static string[] LineToUnits(this string str)
+        {
+            return str.Split(new char[] { ' ', '　' }, StringSplitOptions.RemoveEmptyEntries);
+        }
     }
 }

@@ -5,11 +5,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <MeCabUseDefaultDictionary>False</MeCabUseDefaultDictionary>
+    <Authors>WL</Authors>
+    <Product />
+    <PackageProjectUrl>https://github.com/xyh20180101/RomajiConverter</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AduSkin" Version="1.1.1.8" />
-    <PackageReference Include="Lucene.Net.Analysis.Kuromoji" Version="4.8.0-beta00013" />
     <PackageReference Include="MeCab.DotNet" Version="0.0.30" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Opportunity.LrcParser" Version="1.0.4" />

@@ -1,57 +1,69 @@
-﻿using Lucene.Net.Analysis;
-using Lucene.Net.Analysis.Ja;
-using Lucene.Net.Analysis.Ja.TokenAttributes;
-using Lucene.Net.Analysis.TokenAttributes;
-using MeCab;
+﻿using MeCab;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using WanaKanaSharp;
 
 namespace RomajiConverter.Helper
 {
     public static class RomajiHelper
     {
+        private static MeCabTagger tagger;
+
+        public static void Init()
+        {
+            var parameter = new MeCabParam
+            {
+                DicDir = "unidic",
+                LatticeLevel = MeCabLatticeLevel.Zero,
+            };
+            tagger = MeCabTagger.Create(parameter);
+        }
+
         public static List<ReturnText> ToRomaji(string text, bool isSpace = true, float chineseRate = 1f)
         {
-            try
+            var lineTextList = text.RemoveEmptyLine().Split(Environment.NewLine);
+
+            var returnList = new List<ReturnText>();
+
+
+            for (var index = 0; index < lineTextList.Length; index++)
             {
-                var lineTextList = text.RemoveEmptyLine().Split(Environment.NewLine);
+                var line = lineTextList[index];
 
-                var returnList = new List<ReturnText>();
+                var returnText = new ReturnText();
 
-
-                for (var index = 0; index < lineTextList.Length; index++)
+                if (IsChinese(line, chineseRate))
                 {
-                    var line = lineTextList[index];
+                    continue;
+                }
+                returnText.Japanese = line;
 
-                    var returnText = new ReturnText();
 
-                    if (IsChinese(line, chineseRate))
-                    {
-                        continue;
-                    }
-
-                    returnText.Japanese = line;
-                    returnText.Romaji = UnitToRomaji(line, isSpace);
-                    if (index + 1 < lineTextList.Length &&
-                        IsChinese(lineTextList[index + 1], chineseRate))
-                    {
-                        returnText.Chinese = lineTextList[index + 1];
-                    }
-
-                    returnText.Index = returnList.Count;
-                    returnList.Add(returnText);
+                var units = line.LineToUnits();
+                var romajiUnits = new List<string>();
+                foreach (var unit in units)
+                {
+                    romajiUnits.Add(UnitToRomaji(unit, isSpace));
                 }
 
-                return returnList;
+                returnText.Romaji = string.Join(" ", romajiUnits);
+
+
+                if (index + 1 < lineTextList.Length &&
+                    IsChinese(lineTextList[index + 1], chineseRate))
+                {
+                    returnText.Chinese = lineTextList[index + 1];
+                }
+
+                returnText.Index = returnList.Count;
+                returnList.Add(returnText);
             }
-            catch (Exception e)
-            {
-                return new List<ReturnText>();
-            }
+
+            return returnList;
         }
 
         /// <summary>
@@ -62,9 +74,6 @@ namespace RomajiConverter.Helper
         /// <returns></returns>
         public static bool IsChinese(string str, float rate)
         {
-            if (rate > 1 || rate < 0)
-                throw new Exception("容错率超出范围");
-
             if (str.Length < 2)
                 return false;
 
@@ -117,56 +126,38 @@ namespace RomajiConverter.Helper
             return (chCount + enCount) / total >= rate;
         }
 
-        public static string GetPronunciation(string str)
+        public static bool IsEnglish(string str)
         {
-            var result = new StringBuilder();
-            using (var sr = new StringReader(str))
-            {
-                Tokenizer tokenizer = new JapaneseTokenizer(sr, null, true, JapaneseTokenizerMode.NORMAL);
-                using (var tokenStream = new TokenStreamComponents(tokenizer, tokenizer).TokenStream)
-                {
-                    tokenStream.Reset();
-                    while (tokenStream.IncrementToken())
-                    {
-                        result.Append(tokenStream.GetAttribute<IReadingAttribute>().GetPronunciation());
-                    }
-                }
-            }
-
-            return result.ToString();
+            return new Regex("^[a-zA-Z0-9 ]+$").IsMatch(str);
         }
 
         public static string UnitToRomaji(string str, bool isSpace)
         {
-            var parameter = new MeCabParam
-            {
-                LatticeLevel = MeCabLatticeLevel.Two
-            };
-            var tagger = MeCabTagger.Create(parameter);
             var list = tagger.ParseToNodes(str);
 
             var result = "";
 
             foreach (var item in list)
             {
-                var space = (isSpace &&(item.Next?.Feature?.Split(',')[0]?? "記号") != "記号") ? " " : "";
+                var nextFeatures = item.Next?.Feature?.Split(',') ?? new string[] { };
+                var space = (!isSpace || nextFeatures.Length <= 6 || new string[] { "記号", "補助記号" }.Contains(nextFeatures[0] ?? "記号")) ? "" : " ";
                 if (item.CharType > 0)
                 {
                     var features = item.Feature.Split(',');
-                    if (features[0] == "記号")
+                    if (features.Length <= 6 || new string[] { "補助記号" }.Contains(features[0]))
                     {
                         result += item.Surface;
                     }
-                    else if (features[6] == "*")
+                    else if (IsEnglish(item.Surface))
                     {
                         result += item.Surface;
                     }
                     else
                     {
-                        result += WanaKana.ToRomaji(features[8]) + space;
+                        result += WanaKana.ToRomaji(features[ChooseIndexByType(features[0])]) + space;
                     }
                 }
-                else if (item.Stat!=MeCabNodeStat.Bos)
+                else if (item.Stat != MeCabNodeStat.Bos)
                 {
                     result += item.Surface + space;
                 }
@@ -183,6 +174,15 @@ namespace RomajiConverter.Helper
             }
 
             return result;
+        }
+
+        private static int ChooseIndexByType(string type)
+        {
+            switch (type)
+            {
+                case "助詞": return 11;
+                default: return 19;
+            }
         }
     }
 

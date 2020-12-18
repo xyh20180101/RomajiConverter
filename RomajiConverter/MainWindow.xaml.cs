@@ -29,6 +29,7 @@ namespace RomajiConverter
             BorderBrush = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(Application.Current.Resources["DefaultBrush"].ToString()));
             InitializeComponent();
             CloudMusicHelper.Init();
+            RomajiHelper.Init();
             SpaceCheckBox.Checked += CheckBox_Checked;
             SpaceCheckBox.Unchecked += CheckBox_Unchecked;
             NewLineCheckBox.Checked += CheckBox_Checked;
@@ -80,7 +81,7 @@ namespace RomajiConverter
                 if (GetBool(NewLineCheckBox.IsChecked) && i < result.Count - 1)
                     output.AppendLine();
             }
-            output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
+            if(result.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
             OutputTextBox.Text = output.ToString();
         }
 
@@ -105,6 +106,12 @@ namespace RomajiConverter
 
         private void MetroTitleMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            new SettingsWindow().Show();
+        }
+
+        private void MetroWindow_Closed(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
