@@ -131,6 +131,11 @@ namespace RomajiConverter.Helper
             return new Regex("^[a-zA-Z0-9 ]+$").IsMatch(str);
         }
 
+        public static bool IsJapanese(string str)
+        {
+            return Regex.IsMatch(str, @"^[\u3040-\u30ff]+$");
+        }
+
         public static string UnitToRomaji(string str, bool isSpace)
         {
             var list = tagger.ParseToNodes(str);
@@ -144,7 +149,11 @@ namespace RomajiConverter.Helper
                 if (item.CharType > 0)
                 {
                     var features = item.Feature.Split(',');
-                    if (features.Length <= 6 || new string[] { "補助記号" }.Contains(features[0]))
+                    if (IsJapanese(item.Surface))
+                    {
+                        result += WanaKana.ToRomaji(item.Surface) + space;
+                    }
+                    else if (features.Length <= 6 || new string[] { "補助記号" }.Contains(features[0]))
                     {
                         result += item.Surface;
                     }

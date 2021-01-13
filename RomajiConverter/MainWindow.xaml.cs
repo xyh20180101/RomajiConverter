@@ -104,11 +104,6 @@ namespace RomajiConverter
 
         #endregion
 
-        private void MetroTitleMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            new SettingsWindow().Show();
-        }
-
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
             Environment.Exit(0);
