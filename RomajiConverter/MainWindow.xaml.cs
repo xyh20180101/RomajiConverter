@@ -40,6 +40,7 @@ namespace RomajiConverter
             JPCheckBox.Unchecked += CheckBox_Unchecked;
             CHCheckBox.Checked += CheckBox_Checked;
             CHCheckBox.Unchecked += CheckBox_Unchecked;
+            this.Title = $"RomajiConverter ({System.Reflection.Assembly.GetExecutingAssembly().GetName().Version})";
         }
 
         private async void ImportCloudMusicButton_Click(object sender, RoutedEventArgs e)
@@ -107,6 +108,11 @@ namespace RomajiConverter
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void MetroTitleMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            new InfoWindow().ShowDialog();
         }
     }
 }

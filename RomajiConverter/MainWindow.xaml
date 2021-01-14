@@ -8,6 +8,11 @@
                      mc:Ignorable="d"
                      BorderBrush="{DynamicResource DefaultBrush}"
                      Title="RomajiConverter" MinWidth="900" MinHeight="500" Width="800" Height="500" Icon="/favicon.ico" BorderThickness="0" WindowStyle="None" Closed="MetroWindow_Closed">
+    <AduSkin:MetroWindow.Menu>
+        <AduSkin:MetroTitleMenu Height="40">
+            <AduSkin:MetroTitleMenuItem Header="关于" Click="MetroTitleMenuItem_Click"></AduSkin:MetroTitleMenuItem>
+        </AduSkin:MetroTitleMenu>
+    </AduSkin:MetroWindow.Menu>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40px"/>

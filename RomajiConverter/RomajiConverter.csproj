@@ -9,7 +9,12 @@
     <Authors>WL</Authors>
     <Product />
     <PackageProjectUrl>https://github.com/xyh20180101/RomajiConverter</PackageProjectUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="GitHub-Mark-64px.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AduSkin" Version="1.1.1.8" />
@@ -21,6 +26,7 @@
 
   <ItemGroup>
     <Resource Include="favicon.ico" />
+    <Resource Include="GitHub-Mark-64px.png" />
   </ItemGroup>
 
   <ItemGroup>
