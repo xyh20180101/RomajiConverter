@@ -6,6 +6,7 @@
                      xmlns:local="clr-namespace:RomajiConverter"
                      xmlns:AduSkin="clr-namespace:AduSkin.Controls.Metro;assembly=AduSkin"
                      mc:Ignorable="d"
+                     BorderBrush="{DynamicResource DefaultBrush}"
                      Title="关于" Height="220" Width="400" WindowStyle="None" ResizeMode="NoResize">
     <Grid>
 <Image Source="/GitHub-Mark-64px.png" Width="64" Height="64" VerticalAlignment="Top" Margin="0,15,0,0" />

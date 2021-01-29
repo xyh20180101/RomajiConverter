@@ -26,7 +26,6 @@ namespace RomajiConverter
     {
         public MainWindow()
         {
-            BorderBrush = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(Application.Current.Resources["DefaultBrush"].ToString()));
             InitializeComponent();
             CloudMusicHelper.Init();
             RomajiHelper.Init();
