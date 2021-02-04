@@ -81,7 +81,7 @@ namespace RomajiConverter
                 if (GetBool(NewLineCheckBox.IsChecked) && i < result.Count - 1)
                     output.AppendLine();
             }
-            if(result.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
+            if (result.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
             OutputTextBox.Text = output.ToString();
         }
 
@@ -112,6 +112,11 @@ namespace RomajiConverter
         private void MetroTitleMenuItem_Click(object sender, RoutedEventArgs e)
         {
             new InfoWindow().ShowDialog();
+        }
+
+        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(OutputTextBox.Text);
         }
     }
 }

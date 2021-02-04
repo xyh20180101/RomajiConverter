@@ -40,7 +40,7 @@ namespace RomajiConverter.Helper
                 {
                     continue;
                 }
-                returnText.Japanese = line;
+                returnText.Japanese = line.Replace("\0", "");
 
 
                 var units = line.LineToUnits();
@@ -50,13 +50,13 @@ namespace RomajiConverter.Helper
                     romajiUnits.Add(UnitToRomaji(unit, isSpace));
                 }
 
-                returnText.Romaji = string.Join(" ", romajiUnits);
+                returnText.Romaji = string.Join(" ", romajiUnits).Replace("\0", ""); ;
 
 
                 if (index + 1 < lineTextList.Length &&
                     IsChinese(lineTextList[index + 1], chineseRate))
                 {
-                    returnText.Chinese = lineTextList[index + 1];
+                    returnText.Chinese = lineTextList[index + 1].Replace("\0", ""); ;
                 }
 
                 returnText.Index = returnList.Count;
