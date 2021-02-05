@@ -11,18 +11,44 @@ namespace RomajiConverter.Helper
 {
     public static class RomajiHelper
     {
-        private static MeCabTagger tagger;
+        /// <summary>
+        /// 分词器
+        /// </summary>
+        private static MeCabTagger _tagger;
+
+        /// <summary>
+        /// 自定义词典
+        /// </summary>
+        private static Dictionary<string, string> _customizeDict;
 
         public static void Init()
         {
             var parameter = new MeCabParam
             {
-                DicDir = "unidic",
+                DicDir = "unidic",//词典路径
                 LatticeLevel = MeCabLatticeLevel.Zero,
             };
-            tagger = MeCabTagger.Create(parameter);
+            _tagger = MeCabTagger.Create(parameter);
+
+            var str = File.ReadAllText("customizeDict.txt");
+            var list = str.Split(Environment.NewLine);
+            _customizeDict = new Dictionary<string, string>();
+            foreach (var item in list)
+            {
+                if (string.IsNullOrWhiteSpace(item)) continue;
+                var array = item.Split(" ");
+                if (array.Length < 2) continue;
+                _customizeDict.Add(array[0], array[1]);
+            }
         }
 
+        /// <summary>
+        /// 生成转换结果列表
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="isSpace"></param>
+        /// <param name="chineseRate"></param>
+        /// <returns></returns>
         public static List<ReturnText> ToRomaji(string text, bool isSpace = true, float chineseRate = 1f)
         {
             var lineTextList = text.RemoveEmptyLine().Split(Environment.NewLine);
@@ -40,10 +66,10 @@ namespace RomajiConverter.Helper
                 {
                     continue;
                 }
-                returnText.Japanese = line.Replace("\0", "");
+                returnText.Japanese = line.Replace("\0", "");//文本中如果包含\0，会导致复制只能粘贴到第一个\0处，需要替换为空，以下同理
 
 
-                var units = line.LineToUnits();
+                var units = line.LineToUnits();//将行文本拆分为单词
                 var romajiUnits = new List<string>();
                 foreach (var unit in units)
                 {
@@ -126,19 +152,35 @@ namespace RomajiConverter.Helper
             return (chCount + enCount) / total >= rate;
         }
 
+        /// <summary>
+        /// 判断字符串是否全为英文数字空格
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static bool IsEnglish(string str)
         {
             return new Regex("^[a-zA-Z0-9 ]+$").IsMatch(str);
         }
 
+        /// <summary>
+        /// 判断字符串是否全为假名
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static bool IsJapanese(string str)
         {
             return Regex.IsMatch(str, @"^[\u3040-\u30ff]+$");
         }
 
+        /// <summary>
+        /// 单词转为罗马音
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="isSpace"></param>
+        /// <returns></returns>
         public static string UnitToRomaji(string str, bool isSpace)
         {
-            var list = tagger.ParseToNodes(str);
+            var list = _tagger.ParseToNodes(str);
 
             var result = "";
 
@@ -149,20 +191,29 @@ namespace RomajiConverter.Helper
                 if (item.CharType > 0)
                 {
                     var features = item.Feature.Split(',');
-                    if (IsJapanese(item.Surface))
+                    if (TryCustomConvert(item.Surface, out var customResult))
                     {
+                        //用户自定义词典
+                        result += customResult;
+                    }
+                    else if (IsJapanese(item.Surface))
+                    {
+                        //纯假名
                         result += WanaKana.ToRomaji(item.Surface) + space;
                     }
                     else if (features.Length <= 6 || new string[] { "補助記号" }.Contains(features[0]))
                     {
+                        //标点符号
                         result += item.Surface;
                     }
                     else if (IsEnglish(item.Surface))
                     {
+                        //英文
                         result += item.Surface;
                     }
                     else
                     {
+                        //汉字
                         result += WanaKana.ToRomaji(features[ChooseIndexByType(features[0])]) + space;
                     }
                 }
@@ -185,12 +236,37 @@ namespace RomajiConverter.Helper
             return result;
         }
 
+        /// <summary>
+        /// 根据不同的词型选择正确的索引
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private static int ChooseIndexByType(string type)
         {
             switch (type)
             {
                 case "助詞": return 11;
                 default: return 19;
+            }
+        }
+
+        /// <summary>
+        /// 自定义转换规则
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private static bool TryCustomConvert(string str, out string result)
+        {
+            if (_customizeDict.ContainsKey(str))
+            {
+                result = _customizeDict[str];
+                return true;
+            }
+            else
+            {
+                result = "";
+                return false;
             }
         }
     }
