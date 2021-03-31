@@ -22,8 +22,9 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <AduSkin:AduFlatButton x:Name="ImportCloudMusicButton" Grid.Row="0" Grid.Column="0" Content="获取网易云正在播放" Width="120" Height="30" HorizontalAlignment="Left" Margin="5,0,0,0" Background="{DynamicResource DefaultBrush}" Click="ImportCloudMusicButton_Click"/>
-        <AduSkin:AduFlatButton x:Name="ClearButton" Grid.Row="0" Grid.Column="0" Content="清空" Width="60" Height="30" HorizontalAlignment="Left" Margin="130,0,0,0" Background="White" Foreground="#FF404040" Click="ClearButton_Click"/>
+        <AduSkin:AduFlatButton x:Name="ImportCloudMusicButton" Grid.Row="0" Grid.Column="0" Content="获取网易云" Width="80" Height="30" HorizontalAlignment="Left" Margin="5,0,0,0" Background="{DynamicResource DefaultBrush}" Click="ImportCloudMusicButton_Click"/>
+        <AduSkin:AduFlatButton x:Name="ImportQQMusicButton" Grid.Row="0" Grid.Column="0" Content="获取QQ音乐" Width="80" Height="30" HorizontalAlignment="Left" Margin="90,0,0,0" Background="#1ECD99" Click="ImportQQMusicButton_Click"/>
+        <AduSkin:AduFlatButton x:Name="ClearButton" Grid.Row="0" Grid.Column="0" Content="清空" Width="60" Height="30" HorizontalAlignment="Left" Margin="175,0,0,0" Background="White" Foreground="#FF404040" Click="ClearButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ConvertButton" Grid.Row="0" Grid.Column="0" Content="转换" Width="60" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="{DynamicResource DefaultBrush}" Click="ConvertButton_Click"/>
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
             <AduSkin:AduCheckBox x:Name="SpaceCheckBox" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="空格分隔"></AduSkin:AduCheckBox>

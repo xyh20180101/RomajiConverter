@@ -19,9 +19,10 @@ namespace RomajiConverter.Helper
 
         public static string GetCurrentSongmid()
         {
-            var hwnd = Process.GetProcessesByName("QQMusic").Select(p => p.MainWindowHandle).FirstOrDefault();
+            var hwnds = Process.GetProcessesByName("QQMusic").Select(p => p.MainWindowHandle);
+            if (hwnds.Any() == false) throw new Exception("找不到QQ音乐进程");
             var stringBuilder = new StringBuilder(512);
-            GetWindowText(hwnd, stringBuilder, stringBuilder.Capacity);
+            GetWindowText(hwnds.FirstOrDefault(), stringBuilder, stringBuilder.Capacity);
             var songName = stringBuilder.ToString().Trim();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");

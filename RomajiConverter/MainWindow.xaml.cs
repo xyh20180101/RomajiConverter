@@ -44,9 +44,13 @@ namespace RomajiConverter
 
         private async void ImportCloudMusicButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = await CloudMusicHelper.GetLrc(CloudMusicHelper.GetLastSongId());
+            ShowLrc(await CloudMusicHelper.GetLrc(CloudMusicHelper.GetLastSongId()));
+        }
+
+        private void ShowLrc(List<ReturnLrc> lrc)
+        {
             var stringBuilder = new StringBuilder();
-            foreach (var item in result)
+            foreach (var item in lrc)
             {
                 stringBuilder.AppendLine(item.JLrc);
                 stringBuilder.AppendLine(item.CLrc);
@@ -117,6 +121,11 @@ namespace RomajiConverter
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
             Clipboard.SetText(OutputTextBox.Text);
+        }
+
+        private void ImportQQMusicButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowLrc(QQMusicHelper.GetLrc(QQMusicHelper.GetCurrentSongmid()));
         }
     }
 }
