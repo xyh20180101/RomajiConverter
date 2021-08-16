@@ -23,14 +23,14 @@ namespace RomajiConverter.Helper
             if (hwnds.Any() == false) throw new Exception("找不到QQ音乐进程");
             var stringBuilder = new StringBuilder(512);
             GetWindowText(hwnds.FirstOrDefault(), stringBuilder, stringBuilder.Capacity);
-            var songName = stringBuilder.ToString().Trim();
+            var songName = stringBuilder.ToString().Trim().Split("-")[0];
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
             var result = httpClient.GetStringAsync(new Uri($"https://api.qq.jsososo.com/search/quick?key={songName}")).Result;
             var jObject = JObject.Parse(result);
             var list = jObject["data"]["song"]["itemlist"];
             if (list.Any()) return (string) list[0]["mid"];
-            return "";
+            throw new Exception("获取当前歌曲失败");
         }
 
         public static List<ReturnLrc> GetLrc(string mid)
