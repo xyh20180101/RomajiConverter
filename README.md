@@ -14,6 +14,17 @@ WPF RomajiConverter
 - 汉字和多音假名（例如：は）的转换不一定准确，以歌曲发音为准
 - 导入歌词会有短暂延迟，而且有可能报错（可能与正在播放的歌曲有关）
 
+## 常见问题
+```
+本能が云(い)う、嫌々(いやいや)  =>  honnou ga云(i)u、iyaiya(iyaiya)
+どこかで微(かす)か伝うメーデー  =>  doko ka de bi(kasu)ka tsutau mee dee
+```
+- 上面这种汉字没转换、读音错误的情况的原因为：歌词上传者已经在括号里标注了读音。这种情况下直接使用括号里的读音就可以了
+```
+思い浮かぶアナタの颜...  =>  omoiukabu anata no颜...
+```
+- "颜"应为"顔"，歌词中的汉字被简化后可能无法识别
+
 ## 项目引用
 [AduSkin WPF UI](https://github.com/aduskin/AduSkin)  
 [MeCab.DotNet](https://github.com/kekyo/MeCab.DotNet)  
