@@ -38,6 +38,8 @@ namespace RomajiConverter.Helper
             var jpnLrc = Lyrics.Parse(content["lyric"].ToString());
             var chnLrcResponse = await client.GetAsync($"api/song/lyric?os=pc&id={songId}&tv=-1");
             content = JObject.Parse(await chnLrcResponse.Content.ReadAsStringAsync());
+            if ((int?) content["code"] != 200)
+                throw new Exception("获取歌词出错");
             var chnLrc = Lyrics.Parse(content["tlyric"]["lyric"].ToString());
             var lrcList = jpnLrc.Lyrics.Lines.Select(line => new ReturnLrc { Time = line.Timestamp.ToString("mm:ss.fff"), JLrc = line.Content }).ToList();
             foreach (var line in chnLrc.Lyrics.Lines)

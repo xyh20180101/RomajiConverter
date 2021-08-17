@@ -9,7 +9,7 @@
     <Authors>WL</Authors>
     <Product />
     <PackageProjectUrl>https://github.com/xyh20180101/RomajiConverter</PackageProjectUrl>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AduSkin" Version="1.1.1.8" />
-    <PackageReference Include="MeCab.DotNet" Version="0.0.30" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="AduSkin" Version="1.1.1.9" />
+    <PackageReference Include="MeCab.DotNet" Version="0.0.40" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Opportunity.LrcParser" Version="1.0.4" />
     <PackageReference Include="WanaKanaSharp" Version="0.1.1" />
   </ItemGroup>

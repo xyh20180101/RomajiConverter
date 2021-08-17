@@ -69,7 +69,7 @@ namespace RomajiConverter.Helper
                 returnText.Japanese = line.Replace("\0", "");//文本中如果包含\0，会导致复制只能粘贴到第一个\0处，需要替换为空，以下同理
 
 
-                var units = line.LineToUnits();//将行文本拆分为单词
+                var units = line.LineToUnits();//将行拆分为分句
                 var romajiUnits = new List<string>();
                 foreach (var unit in units)
                 {
@@ -120,15 +120,15 @@ namespace RomajiConverter.Helper
                 }
 
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-                var gbBytes = Encoding.GetEncoding("GB2312").GetBytes(word.ToString());
+                var gbBytes = Encoding.Unicode.GetBytes(word.ToString());
 
                 if (gbBytes.Length == 2)  // double bytes char.  
                 {
-                    if (gbBytes[0] >= 0xB0 && gbBytes[0] <= 0xF7 && gbBytes[1] >= 0xA1 && gbBytes[1] <= 0xFE)//简体中文
+                    if (gbBytes[1] >= 0x4E && gbBytes[1] <= 0x9F)//中文
                     {
                         chCount++;
                     }
-                    else if (gbBytes[0] >= 0xA0 && gbBytes[0] <= 0xA3 && gbBytes[1] >= 0xA1 && gbBytes[1] <= 0xFE)//中文符号
+                    else
                     {
                         total--;
                     }
@@ -140,7 +140,7 @@ namespace RomajiConverter.Helper
                     {
                         enCount++;
                     }
-                    else//英文符号
+                    else
                     {
                         total--;
                     }
@@ -173,7 +173,7 @@ namespace RomajiConverter.Helper
         }
 
         /// <summary>
-        /// 单词转为罗马音
+        /// 分句转为罗马音
         /// </summary>
         /// <param name="str"></param>
         /// <param name="isSpace"></param>
@@ -190,13 +190,14 @@ namespace RomajiConverter.Helper
                 var space = (!isSpace || nextFeatures.Length <= 6 || new string[] { "記号", "補助記号" }.Contains(nextFeatures[0] ?? "記号")) ? "" : " ";
                 if (item.CharType > 0)
                 {
-                    var features = item.Feature.Split(',');
+                    string[] features;
+                    features = item.Feature.Split(',');
                     if (TryCustomConvert(item.Surface, out var customResult))
                     {
                         //用户自定义词典
                         result += customResult;
                     }
-                    else if (IsJapanese(item.Surface))
+                    else if (features.Length > 0 && features[0] != "助詞" && IsJapanese(item.Surface))
                     {
                         //纯假名
                         result += WanaKana.ToRomaji(item.Surface) + space;

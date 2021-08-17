@@ -71,7 +71,7 @@ namespace RomajiConverter
 
         private void Convert()
         {
-            var result = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked));
+            var result = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked)); 
             var output = new StringBuilder();
             for (var i = 0; i < result.Count; i++)
             {
@@ -108,7 +108,7 @@ namespace RomajiConverter
 
         #endregion
 
-        private void MetroWindow_Closed(object sender, EventArgs e)
+        private void MetroWindow_Closing(object sender, EventArgs e)
         {
             Environment.Exit(0);
         }

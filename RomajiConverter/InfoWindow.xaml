@@ -12,7 +12,7 @@
 <Image Source="/GitHub-Mark-64px.png" Width="64" Height="64" VerticalAlignment="Top" Margin="0,15,0,0" />
         <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0">
             <Label.Content>
-                <Hyperlink NavigateUri="https://github.com/xyh20180101/RomajiConverter" Click="Hyperlink_Click" Cursor="Hand">
+                <Hyperlink NavigateUri="https://github.com/xyh20180101/RomajiConverter/releases" Click="Hyperlink_Click" Cursor="Hand">
                     <InlineUIContainer>
                         <TextBlock Text="项目地址（可在此获取更新版本,如果有的话）" Foreground="Black">
                             <TextBlock.TextDecorations>

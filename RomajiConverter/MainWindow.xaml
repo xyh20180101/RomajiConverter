@@ -7,7 +7,7 @@
                      xmlns:AduSkin="clr-namespace:AduSkin.Controls.Metro;assembly=AduSkin"
                      mc:Ignorable="d"
                      BorderBrush="{DynamicResource DefaultBrush}"
-                     Title="RomajiConverter" MinWidth="900" MinHeight="500" Width="900" Height="500" Icon="/favicon.ico" BorderThickness="0" WindowStyle="None" Closed="MetroWindow_Closed">
+                     Title="RomajiConverter" MinWidth="900" MinHeight="500" Width="900" Height="500" Icon="/favicon.ico" BorderThickness="0" WindowStyle="None" Closing="MetroWindow_Closing">
     <AduSkin:MetroWindow.Menu>
         <AduSkin:MetroTitleMenu Height="40">
             <AduSkin:MetroTitleMenuItem Header="关于" Click="MetroTitleMenuItem_Click"></AduSkin:MetroTitleMenuItem>
