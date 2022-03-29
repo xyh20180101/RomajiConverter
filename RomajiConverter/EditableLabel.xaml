@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="RomajiConverter.EditableLabel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RomajiConverter"
+             x:Name="UserControl"
+             mc:Ignorable="d">
+    <Grid>
+        <Border Visibility="{Binding Path=EditLabelVisibility,UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" CornerRadius="4" BorderBrush="#AAAAAAAA" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label  Visibility="{Binding Path=EditLabelVisibility,UpdateSourceTrigger=PropertyChanged}" x:Name="EditLabel" Content="{Binding Path=Text,UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseDown="Label_MouseDown" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,0,2,0"/>
+        </Border>
+        <TextBox Visibility="{Binding Path=EditBoxVisibility,UpdateSourceTrigger=PropertyChanged}" x:Name="EditBox" Text="{Binding Path=Text,UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" KeyDown="TextBox_KeyDown" LostFocus="EditBox_LostFocus">
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </TextBox.Resources>
+        </TextBox>
+    </Grid>
+</UserControl>
