@@ -24,6 +24,8 @@ namespace RomajiConverter
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private List<ReturnText> returnTexts = new List<ReturnText>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -71,22 +73,23 @@ namespace RomajiConverter
 
         private void Convert()
         {
-            var result = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked)); 
-            var output = new StringBuilder();
-            for (var i = 0; i < result.Count; i++)
+            returnTexts = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked));
+
+            EditPanel.Children.Clear();
+
+            for (var i = 0; i < returnTexts.Count; i++)
             {
-                var item = result[i];
-                if (GetBool(RomajiCheckBox.IsChecked))
-                    output.AppendLine(item.Romaji);
-                if (GetBool(JPCheckBox.IsChecked))
-                    output.AppendLine(item.Japanese);
-                if (GetBool(CHCheckBox.IsChecked) && !string.IsNullOrWhiteSpace(item.Chinese))
-                    output.AppendLine(item.Chinese);
-                if (GetBool(NewLineCheckBox.IsChecked) && i < result.Count - 1)
-                    output.AppendLine();
+                var item = returnTexts[i];
+                var wrap = new WrapPanel { };
+                foreach (var word in item.Romaji.Split(" "))
+                {
+                    wrap.Children.Add(new EditableLabel { Text = word });
+                }
+                EditPanel.Children.Add(wrap);
+                var jpn = new WrapPanel { };
+                jpn.Children.Add(new EditableLabel { Text = item.Japanese });
+                EditPanel.Children.Add(jpn);
             }
-            if (result.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
-            OutputTextBox.Text = output.ToString();
         }
 
         private bool GetBool(bool? value)
@@ -123,9 +126,23 @@ namespace RomajiConverter
             Clipboard.SetText(OutputTextBox.Text);
         }
 
-        private void ImportQQMusicButton_Click(object sender, RoutedEventArgs e)
+        private void ConvertTextButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowLrc(QQMusicHelper.GetLrc(QQMusicHelper.GetCurrentSongmid()));
+            var output = new StringBuilder();
+            for (var i = 0; i < returnTexts.Count; i++)
+            {
+                var item = returnTexts[i];
+                if (GetBool(RomajiCheckBox.IsChecked))
+                    output.AppendLine(item.Romaji);
+                if (GetBool(JPCheckBox.IsChecked))
+                    output.AppendLine(item.Japanese);
+                if (GetBool(CHCheckBox.IsChecked) && !string.IsNullOrWhiteSpace(item.Chinese))
+                    output.AppendLine(item.Chinese);
+                if (GetBool(NewLineCheckBox.IsChecked) && i < returnTexts.Count - 1)
+                    output.AppendLine();
+            }
+            if (returnTexts.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
+            OutputTextBox.Text = output.ToString();
         }
     }
 }
