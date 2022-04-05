@@ -7,12 +7,18 @@
                      xmlns:AduSkin="clr-namespace:AduSkin.Controls.Metro;assembly=AduSkin"
                      mc:Ignorable="d"
                      BorderBrush="{DynamicResource DefaultBrush}"
-                     Title="RomajiConverter" MinWidth="1200" MinHeight="600" Width="1300" Height="600" Icon="/favicon.ico" BorderThickness="0" WindowStyle="None" Closing="MetroWindow_Closing">
+                     Title="RomajiConverter" MinWidth="1300" MinHeight="600" Width="1300" Height="600" Icon="/favicon.ico" BorderThickness="0" WindowStyle="None" Closing="MetroWindow_Closing">
     <AduSkin:MetroWindow.Menu>
         <AduSkin:MetroTitleMenu Height="40">
             <AduSkin:MetroTitleMenuItem Header="关于" Click="MetroTitleMenuItem_Click"></AduSkin:MetroTitleMenuItem>
         </AduSkin:MetroTitleMenu>
     </AduSkin:MetroWindow.Menu>
+    <AduSkin:MetroWindow.Resources>
+        <Style TargetType="Separator">
+            <Setter Property="Margin" Value="4,0,4,5"></Setter>
+            <Setter Property="Background" Value="#d9d9d9"></Setter>
+        </Style>
+    </AduSkin:MetroWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40px"/>
@@ -26,10 +32,13 @@
         <AduSkin:AduFlatButton x:Name="ImportCloudMusicButton" Grid.Row="0" Grid.Column="0" Content="获取网易云" Width="80" Height="30" HorizontalAlignment="Left" Margin="5,0,0,0" Background="{DynamicResource DefaultBrush}" Click="ImportCloudMusicButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ClearButton" Grid.Row="0" Grid.Column="0" Content="清空" Width="60" Height="30" HorizontalAlignment="Left" Margin="90,0,0,0" Background="White" Foreground="#FF404040" Click="ClearButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ConvertButton" Grid.Row="0" Grid.Column="0" Content="转换" Width="60" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="{DynamicResource DefaultBrush}" Click="ConvertButton_Click"/>
+        <AduSkin:AduFlatButton x:Name="ReadButton" Grid.Row="0" Grid.Column="1" Content="导入" Width="60" Height="30" HorizontalAlignment="Left" Margin="0,0,0,0" Background="{DynamicResource DefaultBrush}" Click="ReadButton_Click"/>
+        <AduSkin:AduFlatButton x:Name="SaveButton" Grid.Row="0" Grid.Column="1" Content="导出" Width="60" Height="30" HorizontalAlignment="Left" Margin="63,0,0,0" Background="{DynamicResource DefaultBrush}" Click="SaveButton_Click"/>
+        <AduSkin:AduFlatButton x:Name="ConvertPictureButton" Grid.Row="0" Grid.Column="1" Content="生成图片" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,77,0" Background="{DynamicResource DefaultBrush}" Click="ConvertTextButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ConvertTextButton" Grid.Row="0" Grid.Column="1" Content="生成文本" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="{DynamicResource DefaultBrush}" Click="ConvertTextButton_Click"/>
-        <Border Grid.Row="1" Grid.Column="1" Margin="3,0,3,5" BorderThickness="1" CornerRadius="2" BorderBrush="#d9d9d9">
-            <ScrollViewer >
-                <StackPanel x:Name="EditPanel" Background="White">
+        <Border Background="White" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5" BorderThickness="1" CornerRadius="2" BorderBrush="#d9d9d9">
+            <ScrollViewer>
+                <StackPanel x:Name="EditPanel" Margin="3">
                 </StackPanel>
             </ScrollViewer>
         </Border>

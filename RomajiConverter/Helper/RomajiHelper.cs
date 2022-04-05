@@ -1,4 +1,5 @@
 ﻿using MeCab;
+using RomajiConverter.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,14 +27,12 @@ namespace RomajiConverter.Helper
             var parameter = new MeCabParam
             {
                 DicDir = "unidic",//词典路径
-                LatticeLevel = MeCabLatticeLevel.Zero,
+                LatticeLevel = MeCabLatticeLevel.Zero
             };
             _tagger = MeCabTagger.Create(parameter);
 
-            var str = File.ReadAllText("customizeDict.txt");
-            var list = str.Split(Environment.NewLine);
             _customizeDict = new Dictionary<string, string>();
-            foreach (var item in list)
+            foreach (var item in File.ReadAllText("customizeDict.txt").Split(Environment.NewLine))
             {
                 if (string.IsNullOrWhiteSpace(item)) continue;
                 var array = item.Split(" ");
@@ -49,47 +48,56 @@ namespace RomajiConverter.Helper
         /// <param name="isSpace"></param>
         /// <param name="chineseRate"></param>
         /// <returns></returns>
-        public static List<ReturnText> ToRomaji(string text, bool isSpace = true, float chineseRate = 1f)
+        public static List<ConvertedLine> ToRomaji(string text, bool isSpace = true, float chineseRate = 1f)
         {
             var lineTextList = text.RemoveEmptyLine().Split(Environment.NewLine);
 
-            var returnList = new List<ReturnText>();
+            var convertedText = new List<ConvertedLine>();
 
 
             for (var index = 0; index < lineTextList.Length; index++)
             {
                 var line = lineTextList[index];
 
-                var returnText = new ReturnText();
+                var convertedLine = new ConvertedLine();
 
                 if (IsChinese(line, chineseRate))
                 {
                     continue;
                 }
-                returnText.Japanese = line.Replace("\0", "");//文本中如果包含\0，会导致复制只能粘贴到第一个\0处，需要替换为空，以下同理
 
+                convertedLine.Japanese = line;
 
-                var units = line.LineToUnits();//将行拆分为分句
-                var romajiUnits = new List<string>();
-                foreach (var unit in units)
+                if (IsEnglish(line))
                 {
-                    romajiUnits.Add(UnitToRomaji(unit, isSpace));
+                    convertedLine.Units = new[] { new ConvertedUnit(line, line) };
+                    convertedLine.Chinese = line;
+                    convertedLine.Index = convertedText.Count;
+                    convertedText.Add(convertedLine);
+                    continue;
                 }
 
-                returnText.Romaji = string.Join(" ", romajiUnits).Replace("\0", ""); ;
+                var sentences = line.LineToSentences();//将行拆分为分句
+                var multiUnits = new List<ConvertedUnit[]>();
+                foreach (var sentence in sentences)
+                {
+                    var units = SentenceToRomaji(sentence);
+                    multiUnits.Add(units);
+                }
 
+                convertedLine.Units = multiUnits.SelectMany(p => p).ToArray();
 
                 if (index + 1 < lineTextList.Length &&
                     IsChinese(lineTextList[index + 1], chineseRate))
                 {
-                    returnText.Chinese = lineTextList[index + 1].Replace("\0", ""); ;
+                    convertedLine.Chinese = lineTextList[index + 1];
                 }
 
-                returnText.Index = returnList.Count;
-                returnList.Add(returnText);
+                convertedLine.Index = convertedText.Count;
+                convertedText.Add(convertedLine);
             }
 
-            return returnList;
+            return convertedText;
         }
 
         /// <summary>
@@ -153,13 +161,13 @@ namespace RomajiConverter.Helper
         }
 
         /// <summary>
-        /// 判断字符串是否全为英文数字空格
+        /// 判断字符串是否全为单字节
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
         public static bool IsEnglish(string str)
         {
-            return new Regex("^[a-zA-Z0-9 ]+$").IsMatch(str);
+            return new Regex("^[\x20-\x7E]+$").IsMatch(str);
         }
 
         /// <summary>
@@ -176,18 +184,15 @@ namespace RomajiConverter.Helper
         /// 分句转为罗马音
         /// </summary>
         /// <param name="str"></param>
-        /// <param name="isSpace"></param>
         /// <returns></returns>
-        public static string UnitToRomaji(string str, bool isSpace)
+        public static ConvertedUnit[] SentenceToRomaji(string str)
         {
-            var list = _tagger.ParseToNodes(str);
+            var list = _tagger.ParseToNodes(str).ToArray();
 
-            var result = "";
+            var result = new List<ConvertedUnit>();
 
             foreach (var item in list)
             {
-                var nextFeatures = item.Next?.Feature?.Split(',') ?? new string[] { };
-                var space = (!isSpace || nextFeatures.Length <= 6 || new string[] { "記号", "補助記号" }.Contains(nextFeatures[0] ?? "記号")) ? "" : " ";
                 if (item.CharType > 0)
                 {
                     string[] features;
@@ -195,35 +200,35 @@ namespace RomajiConverter.Helper
                     if (TryCustomConvert(item.Surface, out var customResult))
                     {
                         //用户自定义词典
-                        result += customResult;
+                        result.Add(new ConvertedUnit(item.Surface, customResult));
                     }
                     else if (features.Length > 0 && features[0] != "助詞" && IsJapanese(item.Surface))
                     {
                         //纯假名
-                        result += WanaKana.ToRomaji(item.Surface) + space;
+                        result.Add(new ConvertedUnit(item.Surface, WanaKana.ToRomaji(item.Surface)));
                     }
                     else if (features.Length <= 6 || new string[] { "補助記号" }.Contains(features[0]))
                     {
                         //标点符号
-                        result += item.Surface;
+                        result.Add(new ConvertedUnit(item.Surface, item.Surface));
                     }
                     else if (IsEnglish(item.Surface))
                     {
                         //英文
-                        result += item.Surface;
+                        result.Add(new ConvertedUnit(item.Surface, item.Surface));
                     }
                     else
                     {
                         //汉字
-                        result += WanaKana.ToRomaji(features[ChooseIndexByType(features[0])]) + space;
+                        result.Add(new ConvertedUnit(item.Surface, WanaKana.ToRomaji(features[ChooseIndexByType(features[0])])));
                     }
                 }
-                else if (item.Stat != MeCabNodeStat.Bos)
+                else if (item.Stat != MeCabNodeStat.Bos && item.Stat != MeCabNodeStat.Eos)
                 {
-                    result += item.Surface + space;
+                    result.Add(new ConvertedUnit(item.Surface, item.Surface));
                 }
             }
-
+            /*
             if (result.LastIndexOf(' ') == -1)
             {
                 return result;
@@ -232,9 +237,9 @@ namespace RomajiConverter.Helper
             if (result.LastIndexOf(' ') == result.Length - 1)
             {
                 result = result.Substring(0, result.Length - 1);
-            }
+            }*/
 
-            return result;
+            return result.ToArray();
         }
 
         /// <summary>
@@ -269,25 +274,6 @@ namespace RomajiConverter.Helper
                 result = "";
                 return false;
             }
-        }
-    }
-
-    public class ReturnText
-    {
-        public int Index { get; set; }
-
-        public string Chinese { get; set; }
-
-        public string Japanese { get; set; }
-
-        public string Romaji { get; set; }
-
-        public ReturnText()
-        {
-            Index = 0;
-            Chinese = "";
-            Japanese = "";
-            Romaji = "";
         }
     }
 }

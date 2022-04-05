@@ -29,7 +29,7 @@ namespace RomajiConverter
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(EditableLabel), new PropertyMetadata(default(string)));
 
-        [Category("extension")]
+        [Category("Extension")]
         public string Text
         {
             get => (string)GetValue(TextProperty);

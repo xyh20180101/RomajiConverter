@@ -14,7 +14,7 @@ namespace RomajiConverter.Helper
             return string.Join(Environment.NewLine, strArray);
         }
 
-        public static string[] LineToUnits(this string str)
+        public static string[] LineToSentences(this string str)
         {
             return str.Split(new char[] { ' ', '　' }, StringSplitOptions.RemoveEmptyEntries);
         }

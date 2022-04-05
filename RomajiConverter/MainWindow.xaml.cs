@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,13 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using AduSkin.Controls.Metro;
 using AduSkin.Themes;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using RomajiConverter.Controls;
 using RomajiConverter.Helper;
+using RomajiConverter.Models;
+using Clipboard = System.Windows.Clipboard;
+using Color = System.Windows.Media.Color;
 
 namespace RomajiConverter
 {
@@ -24,7 +31,7 @@ namespace RomajiConverter
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private List<ReturnText> returnTexts = new List<ReturnText>();
+        private List<ConvertedLine> convertedText = new List<ConvertedLine>();
 
         public MainWindow()
         {
@@ -73,22 +80,27 @@ namespace RomajiConverter
 
         private void Convert()
         {
-            returnTexts = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked));
+            convertedText = RomajiHelper.ToRomaji(InputTextBox.Text);
+            RenderEditPanel(convertedText);
+        }
 
+        private void RenderEditPanel(List<ConvertedLine> list)
+        {
             EditPanel.Children.Clear();
-
-            for (var i = 0; i < returnTexts.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
-                var item = returnTexts[i];
-                var wrap = new WrapPanel { };
-                foreach (var word in item.Romaji.Split(" "))
+                var item = list[i];
+
+                var line = new WrapPanel { };
+                foreach (var unit in item.Units)
                 {
-                    wrap.Children.Add(new EditableLabel { Text = word });
+                    var group = new EditableLabelGroup(unit);
+                    line.Children.Add(group);
                 }
-                EditPanel.Children.Add(wrap);
-                var jpn = new WrapPanel { };
-                jpn.Children.Add(new EditableLabel { Text = item.Japanese });
-                EditPanel.Children.Add(jpn);
+
+                EditPanel.Children.Add(line);
+                if (item.Units.Any() && i < list.Count - 1)
+                    EditPanel.Children.Add(new Separator());
             }
         }
 
@@ -101,12 +113,12 @@ namespace RomajiConverter
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            Convert();
+            OutputTextBox.Text = GetResultText();
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            Convert();
+            OutputTextBox.Text = GetResultText();
         }
 
         #endregion
@@ -128,21 +140,51 @@ namespace RomajiConverter
 
         private void ConvertTextButton_Click(object sender, RoutedEventArgs e)
         {
-            var output = new StringBuilder();
-            for (var i = 0; i < returnTexts.Count; i++)
+            OutputTextBox.Text = GetResultText();
+        }
+
+        private string GetResultText()
+        {
+            string GetString(IEnumerable<string> array)
             {
-                var item = returnTexts[i];
+                return string.Join(GetBool(SpaceCheckBox.IsChecked) ? " " : "", array);
+            }
+
+            var output = new StringBuilder();
+            for (var i = 0; i < convertedText.Count; i++)
+            {
+                var item = convertedText[i];
                 if (GetBool(RomajiCheckBox.IsChecked))
-                    output.AppendLine(item.Romaji);
+                    output.AppendLine(GetString(item.Units.Select(p => p.Romaji)));
                 if (GetBool(JPCheckBox.IsChecked))
                     output.AppendLine(item.Japanese);
                 if (GetBool(CHCheckBox.IsChecked) && !string.IsNullOrWhiteSpace(item.Chinese))
                     output.AppendLine(item.Chinese);
-                if (GetBool(NewLineCheckBox.IsChecked) && i < returnTexts.Count - 1)
+                if (GetBool(NewLineCheckBox.IsChecked) && i < convertedText.Count - 1)
                     output.AppendLine();
             }
-            if (returnTexts.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
-            OutputTextBox.Text = output.ToString();
+            if (convertedText.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
+            return output.ToString();
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var sfd = new SaveFileDialog();
+            sfd.Filter = "json|*.json";
+            if (sfd.ShowDialog().Value)
+                File.WriteAllText(sfd.FileName, JsonConvert.SerializeObject(convertedText));
+        }
+
+        private void ReadButton_Click(object sender, RoutedEventArgs e)
+        {
+            var ofd=new OpenFileDialog();
+            ofd.Filter = "json|*.json";
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog().Value)
+            {
+                convertedText = JsonConvert.DeserializeObject<List<ConvertedLine>>(File.ReadAllText(ofd.FileName));
+                RenderEditPanel(convertedText);
+            }
         }
     }
 }
