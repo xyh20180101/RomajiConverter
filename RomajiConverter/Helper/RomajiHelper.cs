@@ -68,19 +68,15 @@ namespace RomajiConverter.Helper
 
                 convertedLine.Japanese = line;
 
-                if (IsEnglish(line))
-                {
-                    convertedLine.Units = new[] { new ConvertedUnit(line, line) };
-                    convertedLine.Chinese = line;
-                    convertedLine.Index = convertedText.Count;
-                    convertedText.Add(convertedLine);
-                    continue;
-                }
-
                 var sentences = line.LineToSentences();//将行拆分为分句
                 var multiUnits = new List<ConvertedUnit[]>();
                 foreach (var sentence in sentences)
                 {
+                    if (IsEnglish(sentence))
+                    {
+                        multiUnits.Add(new [] {new ConvertedUnit(sentence, sentence)});
+                        continue;
+                    }
                     var units = SentenceToRomaji(sentence);
                     multiUnits.Add(units);
                 }
@@ -228,16 +224,6 @@ namespace RomajiConverter.Helper
                     result.Add(new ConvertedUnit(item.Surface, item.Surface));
                 }
             }
-            /*
-            if (result.LastIndexOf(' ') == -1)
-            {
-                return result;
-            }
-
-            if (result.LastIndexOf(' ') == result.Length - 1)
-            {
-                result = result.Substring(0, result.Length - 1);
-            }*/
 
             return result.ToArray();
         }

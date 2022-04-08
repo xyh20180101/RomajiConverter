@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -177,13 +178,24 @@ namespace RomajiConverter
 
         private void ReadButton_Click(object sender, RoutedEventArgs e)
         {
-            var ofd=new OpenFileDialog();
+            var ofd = new OpenFileDialog();
             ofd.Filter = "json|*.json";
             ofd.Multiselect = false;
             if (ofd.ShowDialog().Value)
             {
                 convertedText = JsonConvert.DeserializeObject<List<ConvertedLine>>(File.ReadAllText(ofd.FileName));
                 RenderEditPanel(convertedText);
+            }
+        }
+
+        private void ConvertPictureButton_Click(object sender, RoutedEventArgs e)
+        {
+            var sfd = new SaveFileDialog();
+            sfd.Filter = "png|*.png";
+            if (sfd.ShowDialog().Value)
+            {
+                using var image = convertedText.ToImage();
+                image.Save(sfd.FileName, ImageFormat.Png);
             }
         }
     }

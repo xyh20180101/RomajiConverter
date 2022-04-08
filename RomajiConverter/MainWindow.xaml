@@ -34,7 +34,7 @@
         <AduSkin:AduFlatButton x:Name="ConvertButton" Grid.Row="0" Grid.Column="0" Content="转换" Width="60" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="{DynamicResource DefaultBrush}" Click="ConvertButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ReadButton" Grid.Row="0" Grid.Column="1" Content="导入" Width="60" Height="30" HorizontalAlignment="Left" Margin="0,0,0,0" Background="{DynamicResource DefaultBrush}" Click="ReadButton_Click"/>
         <AduSkin:AduFlatButton x:Name="SaveButton" Grid.Row="0" Grid.Column="1" Content="导出" Width="60" Height="30" HorizontalAlignment="Left" Margin="63,0,0,0" Background="{DynamicResource DefaultBrush}" Click="SaveButton_Click"/>
-        <AduSkin:AduFlatButton x:Name="ConvertPictureButton" Grid.Row="0" Grid.Column="1" Content="生成图片" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,77,0" Background="{DynamicResource DefaultBrush}" Click="ConvertTextButton_Click"/>
+        <AduSkin:AduFlatButton x:Name="ConvertPictureButton" Grid.Row="0" Grid.Column="1" Content="生成图片" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,77,0" Background="{DynamicResource DefaultBrush}" Click="ConvertPictureButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ConvertTextButton" Grid.Row="0" Grid.Column="1" Content="生成文本" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="{DynamicResource DefaultBrush}" Click="ConvertTextButton_Click"/>
         <Border Background="White" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5" BorderThickness="1" CornerRadius="2" BorderBrush="#d9d9d9">
             <ScrollViewer>
