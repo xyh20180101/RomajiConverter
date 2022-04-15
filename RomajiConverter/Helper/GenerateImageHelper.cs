@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
@@ -22,10 +23,15 @@ namespace RomajiConverter.Helper
             var width = maxLength * size;
             var height = list.Count * size;
             var image = new Bitmap(width, height);
+            using var bg = Graphics.FromImage(image);
+            bg.Clear(Color.White);
             for (var i = 0; i < list.Count; i++)
             {
                 var line = list[i];
                 using var g1 = Graphics.FromImage(image);
+                g1.InterpolationMode = InterpolationMode.High;
+                g1.SmoothingMode = SmoothingMode.HighQuality;
+                g1.CompositingQuality = CompositingQuality.HighQuality;
                 g1.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g1.DrawString(line.Japanese, font, brush, new PointF(0, i * size));
             }

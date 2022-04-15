@@ -20,6 +20,7 @@
     <PackageReference Include="AduSkin" Version="1.1.1.9" />
     <PackageReference Include="MeCab.DotNet" Version="0.0.40" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NTextCat" Version="0.3.65" />
     <PackageReference Include="Opportunity.LrcParser" Version="1.0.4" />
     <PackageReference Include="WanaKanaSharp" Version="0.1.1" />
   </ItemGroup>
@@ -37,6 +38,9 @@
 
   <ItemGroup>
     <None Update="config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Core14.profile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="customizeDict.txt">

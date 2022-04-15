@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using WanaKanaSharp;
+using NTextCat;
 
 namespace RomajiConverter.Helper
 {
@@ -61,7 +62,7 @@ namespace RomajiConverter.Helper
 
                 var convertedLine = new ConvertedLine();
 
-                if (IsChinese(line, chineseRate))
+                if (IsChinese2(line, chineseRate))
                 {
                     continue;
                 }
@@ -74,7 +75,7 @@ namespace RomajiConverter.Helper
                 {
                     if (IsEnglish(sentence))
                     {
-                        multiUnits.Add(new [] {new ConvertedUnit(sentence, sentence)});
+                        multiUnits.Add(new[] { new ConvertedUnit(sentence, sentence) });
                         continue;
                     }
                     var units = SentenceToRomaji(sentence);
@@ -154,6 +155,18 @@ namespace RomajiConverter.Helper
             if (chCount == 0) return false;//一个简体中文都没有
 
             return (chCount + enCount) / total >= rate;
+        }
+
+        public static bool IsChinese2(string str, float rate = 0)
+        {
+            var factory = new RankedLanguageIdentifierFactory();
+            var identifier = factory.Load("Core14.profile.xml");
+            var languages = identifier.Identify(str).ToArray();
+            var mostCertainLanguage = languages.FirstOrDefault();
+            if (mostCertainLanguage != null)
+                return mostCertainLanguage.Item1.Iso639_3 == "zho";
+            else
+                return false;
         }
 
         /// <summary>

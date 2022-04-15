@@ -27,7 +27,7 @@ namespace RomajiConverter
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            AduMessageBox.Show($"{e.Exception.Message}", "UI线程异常");
+            AduMessageBox.Show($"{e.Exception.Message}", "异常");
 
             e.Handled = true;//表示异常已处理，可以继续运行
         }
