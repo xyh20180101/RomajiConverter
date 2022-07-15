@@ -32,7 +32,7 @@ namespace RomajiConverter
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private List<ConvertedLine> convertedText = new List<ConvertedLine>();
+        private List<ConvertedLine> _convertedLineList = new List<ConvertedLine>();
 
         public MainWindow()
         {
@@ -72,6 +72,7 @@ namespace RomajiConverter
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             InputTextBox.Clear();
+            _convertedLineList.Clear();
         }
 
         private void ConvertButton_Click(object sender, RoutedEventArgs e)
@@ -81,16 +82,16 @@ namespace RomajiConverter
 
         private void Convert()
         {
-            convertedText = RomajiHelper.ToRomaji(InputTextBox.Text);
-            RenderEditPanel(convertedText);
+            _convertedLineList = RomajiHelper.ToRomaji(InputTextBox.Text);
+            RenderEditPanel();
         }
 
-        private void RenderEditPanel(List<ConvertedLine> list)
+        private void RenderEditPanel()
         {
             EditPanel.Children.Clear();
-            for (var i = 0; i < list.Count; i++)
+            for (var i = 0; i < _convertedLineList.Count; i++)
             {
-                var item = list[i];
+                var item = _convertedLineList[i];
 
                 var line = new WrapPanel { };
                 foreach (var unit in item.Units)
@@ -100,7 +101,7 @@ namespace RomajiConverter
                 }
 
                 EditPanel.Children.Add(line);
-                if (item.Units.Any() && i < list.Count - 1)
+                if (item.Units.Any() && i < _convertedLineList.Count - 1)
                     EditPanel.Children.Add(new Separator());
             }
         }
@@ -126,7 +127,7 @@ namespace RomajiConverter
 
         private void MetroWindow_Closing(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            //Environment.Exit(0);
         }
 
         private void MetroTitleMenuItem_Click(object sender, RoutedEventArgs e)
@@ -152,19 +153,19 @@ namespace RomajiConverter
             }
 
             var output = new StringBuilder();
-            for (var i = 0; i < convertedText.Count; i++)
+            for (var i = 0; i < _convertedLineList.Count; i++)
             {
-                var item = convertedText[i];
+                var item = _convertedLineList[i];
                 if (GetBool(RomajiCheckBox.IsChecked))
                     output.AppendLine(GetString(item.Units.Select(p => p.Romaji)));
                 if (GetBool(JPCheckBox.IsChecked))
                     output.AppendLine(item.Japanese);
                 if (GetBool(CHCheckBox.IsChecked) && !string.IsNullOrWhiteSpace(item.Chinese))
                     output.AppendLine(item.Chinese);
-                if (GetBool(NewLineCheckBox.IsChecked) && i < convertedText.Count - 1)
+                if (GetBool(NewLineCheckBox.IsChecked) && i < _convertedLineList.Count - 1)
                     output.AppendLine();
             }
-            if (convertedText.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
+            if (_convertedLineList.Any()) output.Remove(output.Length - Environment.NewLine.Length, Environment.NewLine.Length);
             return output.ToString();
         }
 
@@ -173,7 +174,7 @@ namespace RomajiConverter
             var sfd = new SaveFileDialog();
             sfd.Filter = "json|*.json";
             if (sfd.ShowDialog().Value)
-                File.WriteAllText(sfd.FileName, JsonConvert.SerializeObject(convertedText));
+                File.WriteAllText(sfd.FileName, JsonConvert.SerializeObject(_convertedLineList));
         }
 
         private void ReadButton_Click(object sender, RoutedEventArgs e)
@@ -183,8 +184,8 @@ namespace RomajiConverter
             ofd.Multiselect = false;
             if (ofd.ShowDialog().Value)
             {
-                convertedText = JsonConvert.DeserializeObject<List<ConvertedLine>>(File.ReadAllText(ofd.FileName));
-                RenderEditPanel(convertedText);
+                _convertedLineList = JsonConvert.DeserializeObject<List<ConvertedLine>>(File.ReadAllText(ofd.FileName));
+                RenderEditPanel();
             }
         }
 
@@ -194,7 +195,7 @@ namespace RomajiConverter
             sfd.Filter = "png|*.png";
             if (sfd.ShowDialog().Value)
             {
-                using var image = convertedText.ToImage();
+                using var image = _convertedLineList.ToImage(GenerateImageHelper.ImageSetting.Default);
                 image.Save(sfd.FileName, ImageFormat.Png);
             }
         }

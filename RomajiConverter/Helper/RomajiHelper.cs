@@ -62,7 +62,7 @@ namespace RomajiConverter.Helper
 
                 var convertedLine = new ConvertedLine();
 
-                if (IsChinese2(line, chineseRate))
+                if (IsChinese(line, chineseRate))
                 {
                     continue;
                 }
@@ -155,18 +155,6 @@ namespace RomajiConverter.Helper
             if (chCount == 0) return false;//一个简体中文都没有
 
             return (chCount + enCount) / total >= rate;
-        }
-
-        public static bool IsChinese2(string str, float rate = 0)
-        {
-            var factory = new RankedLanguageIdentifierFactory();
-            var identifier = factory.Load("Core14.profile.xml");
-            var languages = identifier.Identify(str).ToArray();
-            var mostCertainLanguage = languages.FirstOrDefault();
-            if (mostCertainLanguage != null)
-                return mostCertainLanguage.Item1.Iso639_3 == "zho";
-            else
-                return false;
         }
 
         /// <summary>

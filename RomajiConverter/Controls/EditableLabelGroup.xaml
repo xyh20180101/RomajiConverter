@@ -9,8 +9,8 @@
              x:Name="Group">
     <Grid>
         <StackPanel>
-            <romajiConverter:EditableLabel Text="{Binding Unit.Romaji,ElementName=Group,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></romajiConverter:EditableLabel>
-            <Label Padding="5,0,5,5" Content="{Binding Unit.Japanese,ElementName=Group,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+            <romajiConverter:EditableLabel Unit="{Binding GroupUnit,ElementName=Group,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></romajiConverter:EditableLabel>
+            <Label Padding="5,0,5,5" Content="{Binding GroupUnit.Japanese,ElementName=Group,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
         </StackPanel>
     </Grid>
 </UserControl>

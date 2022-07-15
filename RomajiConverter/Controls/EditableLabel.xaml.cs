@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using RomajiConverter.Controls;
+using RomajiConverter.Models;
 
 namespace RomajiConverter
 {
@@ -27,13 +29,13 @@ namespace RomajiConverter
             IsEdit = false;
         }
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(EditableLabel), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty UnitProperty = DependencyProperty.Register("Unit", typeof(ConvertedUnit), typeof(EditableLabel), new PropertyMetadata(default(string)));
 
         [Category("Extension")]
-        public string Text
+        public ConvertedUnit Unit
         {
-            get => (string)GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
+            get => (ConvertedUnit)GetValue(UnitProperty);
+            set => SetValue(UnitProperty, value);
         }
 
         private bool _isEdit;

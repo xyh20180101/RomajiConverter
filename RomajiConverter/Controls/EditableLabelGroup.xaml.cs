@@ -23,16 +23,16 @@ namespace RomajiConverter.Controls
         public EditableLabelGroup(ConvertedUnit unit)
         {
             InitializeComponent();
-            Unit = unit;
+            GroupUnit = unit;
         }
 
-        public static readonly DependencyProperty UnitProperty = DependencyProperty.Register("Unit", typeof(ConvertedUnit), typeof(EditableLabelGroup), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty GroupUnitProperty = DependencyProperty.Register("GroupUnit", typeof(ConvertedUnit), typeof(EditableLabelGroup), new PropertyMetadata(default(string)));
 
         [Category("Extension")]
-        public ConvertedUnit Unit
+        public ConvertedUnit GroupUnit
         {
-            get => (ConvertedUnit)GetValue(UnitProperty);
-            set => SetValue(UnitProperty, value);
+            get => (ConvertedUnit)GetValue(GroupUnitProperty);
+            set => SetValue(GroupUnitProperty, value);
         }
     }
 }

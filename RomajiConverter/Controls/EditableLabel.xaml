@@ -8,9 +8,9 @@
              mc:Ignorable="d">
     <Grid Margin="2,2,2,2">
         <Border Visibility="{Binding Path=EditLabelVisibility,UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" CornerRadius="2" BorderBrush="#AAAAAAAA" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Label  Visibility="{Binding Path=EditLabelVisibility,UpdateSourceTrigger=PropertyChanged}" x:Name="EditLabel" Content="{Binding Path=Text,UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseDown="Label_MouseDown" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="6,5,6,5"/>
+            <Label  Visibility="{Binding Path=EditLabelVisibility,UpdateSourceTrigger=PropertyChanged}" x:Name="EditLabel" Content="{Binding Path=Unit.Romaji,UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseDown="Label_MouseDown" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="6,5,6,5"/>
         </Border>
-        <AduSkin:MetroTextBox Visibility="{Binding Path=EditBoxVisibility,UpdateSourceTrigger=PropertyChanged}" x:Name="EditBox" Text="{Binding Path=Text,UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" KeyDown="TextBox_KeyDown" LostFocus="EditBox_LostFocus">
+        <AduSkin:MetroTextBox Visibility="{Binding Path=EditBoxVisibility,UpdateSourceTrigger=PropertyChanged}" x:Name="EditBox" Text="{Binding Path=Unit.Romaji,UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" KeyDown="TextBox_KeyDown" LostFocus="EditBox_LostFocus">
         </AduSkin:MetroTextBox>
     </Grid>
 </UserControl>
