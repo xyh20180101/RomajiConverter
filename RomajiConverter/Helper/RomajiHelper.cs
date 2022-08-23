@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using WanaKanaSharp;
@@ -47,9 +48,10 @@ namespace RomajiConverter.Helper
         /// </summary>
         /// <param name="text"></param>
         /// <param name="isSpace"></param>
+        /// <param name="isAutoVariant"></param>
         /// <param name="chineseRate"></param>
         /// <returns></returns>
-        public static List<ReturnText> ToRomaji(string text, bool isSpace = true, float chineseRate = 1f)
+        public static List<ReturnText> ToRomaji(string text, bool isSpace = true, bool isAutoVariant = false, float chineseRate = 1f)
         {
             var lineTextList = text.RemoveEmptyLine().Split(Environment.NewLine);
 
@@ -73,10 +75,37 @@ namespace RomajiConverter.Helper
                 var romajiUnits = new List<string>();
                 foreach (var unit in units)
                 {
-                    romajiUnits.Add(UnitToRomaji(unit, isSpace));
+                    var romaji = GetRomaji(unit);
+                    romajiUnits.Add(romaji);
                 }
 
-                returnText.Romaji = string.Join(" ", romajiUnits).Replace("\0", ""); ;
+                string GetRomaji(string unit)
+                {
+                    var romaji = UnitToRomaji(unit, isSpace).Replace("\0", "");
+                    var hanMatches = new Regex("[^a-zA-Z0-9 ]").Matches(romaji);
+                    if (isAutoVariant && hanMatches.Any(p => p.Success))
+                    {
+                        var tempUnit = unit;
+                        var tempRomaji = romaji;
+                        foreach (Match match in hanMatches)
+                        {
+                            if (match.Success == false) continue;
+                            tempUnit = tempUnit.Replace(match.Value, VariantHelper.GetVariant(match.Value));
+                            tempRomaji = UnitToRomaji(tempUnit, isSpace).Replace("\0", "");
+                            var tempHanMatches = new Regex("[^a-zA-Z0-9 ]").Matches(tempRomaji);
+                            if (tempHanMatches.Any(p => p.Success) == false)
+                                return tempRomaji;
+                        }
+
+                        return tempRomaji;
+                    }
+                    else
+                    {
+                        return romaji;
+                    }
+                }
+
+                returnText.Romaji = string.Join(" ", romajiUnits);
 
 
                 if (index + 1 < lineTextList.Length &&
@@ -204,7 +233,7 @@ namespace RomajiConverter.Helper
                     }
                     else if (features.Length <= 6 || new string[] { "補助記号" }.Contains(features[0]))
                     {
-                        //标点符号
+                        //未识别出的字符或标点符号
                         result += item.Surface;
                     }
                     else if (IsEnglish(item.Surface))

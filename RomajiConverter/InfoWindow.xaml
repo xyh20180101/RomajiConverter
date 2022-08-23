@@ -7,9 +7,9 @@
                      xmlns:AduSkin="clr-namespace:AduSkin.Controls.Metro;assembly=AduSkin"
                      mc:Ignorable="d"
                      BorderBrush="{DynamicResource DefaultBrush}"
-                     Title="关于" Height="220" Width="400" WindowStyle="None" ResizeMode="NoResize">
+                     Title="关于" Height="260" Width="400" WindowStyle="None" ResizeMode="NoResize">
     <Grid>
-<Image Source="/GitHub-Mark-64px.png" Width="64" Height="64" VerticalAlignment="Top" Margin="0,15,0,0" />
+        <Image Source="/GitHub-Mark-64px.png" Width="64" Height="64" VerticalAlignment="Top" Margin="0,15,0,0" />
         <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0">
             <Label.Content>
                 <Hyperlink NavigateUri="https://github.com/xyh20180101/RomajiConverter/releases" Click="Hyperlink_Click" Cursor="Hand">
@@ -23,7 +23,8 @@
                 </Hyperlink>
             </Label.Content>
         </Label>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0">
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0" Content="相关引用:"></Label>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,120,0,0">
             <Label.Content>
                 <Hyperlink NavigateUri="https://github.com/aduskin/AduSkin" Click="Hyperlink_Click" Cursor="Hand">
                     <InlineUIContainer>
@@ -36,7 +37,7 @@
                 </Hyperlink>
             </Label.Content>
         </Label>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,120,0,0">
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,140,0,0">
             <Label.Content>
                 <Hyperlink NavigateUri="https://github.com/kekyo/MeCab.DotNet" Click="Hyperlink_Click" Cursor="Hand">
                     <InlineUIContainer>
@@ -49,7 +50,7 @@
                 </Hyperlink>
             </Label.Content>
         </Label>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,140,0,0">
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,160,0,0">
             <Label.Content>
                 <Hyperlink NavigateUri="https://github.com/OpportunityLiu/LrcParser" Click="Hyperlink_Click" Cursor="Hand">
                     <InlineUIContainer>
@@ -62,7 +63,7 @@
                 </Hyperlink>
             </Label.Content>
         </Label>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,160,0,0">
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,180,0,0">
             <Label.Content>
                 <Hyperlink NavigateUri="https://github.com/caguiclajmg/WanaKanaSharp" Click="Hyperlink_Click" Cursor="Hand">
                     <InlineUIContainer>
@@ -75,11 +76,24 @@
                 </Hyperlink>
             </Label.Content>
         </Label>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,180,0,0">
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,200,0,0">
             <Label.Content>
                 <Hyperlink NavigateUri="https://unidic.ninjal.ac.jp/" Click="Hyperlink_Click" Cursor="Hand">
                     <InlineUIContainer>
                         <TextBlock Text="UniDic" Foreground="Black">
+                            <TextBlock.TextDecorations>
+                                <TextDecoration/>
+                            </TextBlock.TextDecorations>
+                        </TextBlock>
+                    </InlineUIContainer>
+                </Hyperlink>
+            </Label.Content>
+        </Label>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,220,0,0">
+            <Label.Content>
+                <Hyperlink NavigateUri="https://github.com/unicode-org/unihan-database" Click="Hyperlink_Click" Cursor="Hand">
+                    <InlineUIContainer>
+                        <TextBlock Text="unihan-database" Foreground="Black">
                             <TextBlock.TextDecorations>
                                 <TextDecoration/>
                             </TextBlock.TextDecorations>
