@@ -29,6 +29,7 @@ namespace RomajiConverter
             InitializeComponent();
             CloudMusicHelper.Init();
             RomajiHelper.Init();
+            VariantHelper.Init();
             SpaceCheckBox.Checked += CheckBox_Checked;
             SpaceCheckBox.Unchecked += CheckBox_Unchecked;
             NewLineCheckBox.Checked += CheckBox_Checked;
@@ -39,6 +40,8 @@ namespace RomajiConverter
             JPCheckBox.Unchecked += CheckBox_Unchecked;
             CHCheckBox.Checked += CheckBox_Checked;
             CHCheckBox.Unchecked += CheckBox_Unchecked;
+            AutoVariantCheckBox.Checked += CheckBox_Checked;
+            AutoVariantCheckBox.Unchecked += CheckBox_Checked;
             this.Title = $"RomajiConverter ({System.Reflection.Assembly.GetExecutingAssembly().GetName().Version})";
         }
 
@@ -71,7 +74,7 @@ namespace RomajiConverter
 
         private void Convert()
         {
-            var result = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked)); 
+            var result = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked),GetBool(AutoVariantCheckBox.IsChecked)); 
             var output = new StringBuilder();
             for (var i = 0; i < result.Count; i++)
             {
