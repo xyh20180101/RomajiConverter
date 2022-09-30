@@ -27,9 +27,6 @@ namespace RomajiConverter
         public MainWindow()
         {
             InitializeComponent();
-            CloudMusicHelper.Init();
-            RomajiHelper.Init();
-            VariantHelper.Init();
             SpaceCheckBox.Checked += CheckBox_Checked;
             SpaceCheckBox.Unchecked += CheckBox_Unchecked;
             NewLineCheckBox.Checked += CheckBox_Checked;
@@ -129,6 +126,13 @@ namespace RomajiConverter
         private void ImportQQMusicButton_Click(object sender, RoutedEventArgs e)
         {
             ShowLrc(QQMusicHelper.GetLrc(QQMusicHelper.GetCurrentSongmid()));
+        }
+
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            CloudMusicHelper.Init();
+            RomajiHelper.Init();
+            VariantHelper.Init();
         }
     }
 }
