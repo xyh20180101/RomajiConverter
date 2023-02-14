@@ -38,8 +38,6 @@ namespace RomajiConverter
         public MainWindow()
         {
             InitializeComponent();
-            CloudMusicHelper.Init();
-            RomajiHelper.Init();
             SpaceCheckBox.Checked += CheckBox_Checked;
             SpaceCheckBox.Unchecked += CheckBox_Unchecked;
             NewLineCheckBox.Checked += CheckBox_Checked;
@@ -52,6 +50,13 @@ namespace RomajiConverter
             CHCheckBox.Unchecked += CheckBox_Unchecked;
             this.Title = $"RomajiConverter ({System.Reflection.Assembly.GetExecutingAssembly().GetName().Version})";
             IsDetailMode = false;
+        }
+
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            CloudMusicHelper.Init();
+            RomajiHelper.Init();
+            VariantHelper.Init();
         }
 
         private async void ImportCloudMusicButton_Click(object sender, RoutedEventArgs e)
@@ -77,6 +82,11 @@ namespace RomajiConverter
             _convertedLineList.Clear();
         }
 
+        private void ImportQQMusicButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowLrc(QQMusicHelper.GetLrc(QQMusicHelper.GetCurrentSongmid()));
+        }
+
         private void ConvertButton_Click(object sender, RoutedEventArgs e)
         {
             Convert();
@@ -84,7 +94,7 @@ namespace RomajiConverter
 
         private void Convert()
         {
-            _convertedLineList = RomajiHelper.ToRomaji(InputTextBox.Text);
+            _convertedLineList = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked), GetBool(AutoVariantCheckBox.IsChecked));
 
             if (IsDetailMode)
                 RenderEditPanel();

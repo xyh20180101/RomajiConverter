@@ -23,11 +23,20 @@ WPF RomajiConverter
 ```
 思い浮かぶアナタの颜...  =>  omoiukabu anata no颜...
 ```
-- "颜"应为"顔"，歌词中的汉字被简化后可能无法识别
+- ~~"颜"应为"顔"，歌词中的汉字被简化后可能无法识别~~
+- 1.0.6版本已加入自动简繁变体处理，可解决部分该类问题，但目前发现unihan-database有部分数据仍不是有效的日文字符，所以仍需要手动解决该类错误
+
+## 更新日志
+
+### 1.0.6
+- 新增"是否自动识别变体"功能。如果含有无法匹配到词典的字符，会尝试进行简繁转换后再进行转换（不保证完美，默认关闭）
+
+![](https://raw.githubusercontent.com/xyh20180101/RomajiConverter/main/2.png)
 
 ## 项目引用
 [AduSkin WPF UI](https://github.com/aduskin/AduSkin)  
 [MeCab.DotNet](https://github.com/kekyo/MeCab.DotNet)  
 [LrcParser](https://github.com/OpportunityLiu/LrcParser)  
 [WanaKanaSharp](https://github.com/caguiclajmg/WanaKanaSharp)  
-[UniDic](https://unidic.ninjal.ac.jp/)
+[UniDic](https://unidic.ninjal.ac.jp/)  
+[unihan-database](https://github.com/unicode-org/unihan-database)

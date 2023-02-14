@@ -32,8 +32,10 @@ namespace RomajiConverter.Helper
             };
             _tagger = MeCabTagger.Create(parameter);
 
+            var str = File.ReadAllText("customizeDict.txt");
+            var list = str.Split(Environment.NewLine);
             _customizeDict = new Dictionary<string, string>();
-            foreach (var item in File.ReadAllText("customizeDict.txt").Split(Environment.NewLine))
+            foreach (var item in list)
             {
                 if (string.IsNullOrWhiteSpace(item)) continue;
                 var array = item.Split(" ");
@@ -47,9 +49,10 @@ namespace RomajiConverter.Helper
         /// </summary>
         /// <param name="text"></param>
         /// <param name="isSpace"></param>
+        /// <param name="isAutoVariant"></param>
         /// <param name="chineseRate"></param>
         /// <returns></returns>
-        public static List<ConvertedLine> ToRomaji(string text, bool isSpace = true, float chineseRate = 1f)
+        public static List<ConvertedLine> ToRomaji(string text, bool isSpace = true, bool isAutoVariant = false, float chineseRate = 1f)
         {
             var lineTextList = text.RemoveEmptyLine().Split(Environment.NewLine);
 
@@ -67,9 +70,9 @@ namespace RomajiConverter.Helper
                     continue;
                 }
 
-                convertedLine.Japanese = line;
+                convertedLine.Japanese = line.Replace("\0", "");//文本中如果包含\0，会导致复制只能粘贴到第一个\0处，需要替换为空，以下同理
 
-                var sentences = line.LineToSentences();//将行拆分为分句
+                var sentences = line.LineToUnits();//将行拆分为分句
                 var multiUnits = new List<ConvertedUnit[]>();
                 foreach (var sentence in sentences)
                 {
@@ -78,7 +81,36 @@ namespace RomajiConverter.Helper
                         multiUnits.Add(new[] { new ConvertedUnit(sentence, sentence) });
                         continue;
                     }
-                    var units = SentenceToRomaji(sentence);
+                    ConvertedUnit[] units = SentenceToRomaji(sentence);
+
+                    //变体处理
+                    if (isAutoVariant)
+                    {
+                        var regex = new Regex("[^a-zA-Z0-9 ]");
+
+                        var romajis = string.Join("", units.Select(p => p.Romaji));//整个句子的罗马音
+
+                        var hanMatches = regex.Matches(romajis);
+                        if (hanMatches.Any(p => p.Success))//判断这个句子翻译成罗马音后是否有非英文字符，有就尝试替换变体后再翻译
+                        {
+                            var tempSentence = sentence;//原来的句子
+                            var tempRomaji = romajis;//原来的句子的罗马音
+                            foreach (Match match in hanMatches)
+                            {
+                                if (match.Success == false) continue;//遍历非英文字符
+
+                                tempSentence = tempSentence.Replace(match.Value, VariantHelper.GetVariant(match.Value));//尝试替换后的句子
+                                convertedLine.Japanese = convertedLine.Japanese.Replace(match.Value, VariantHelper.GetVariant(match.Value));//顺便更新一下这个字段
+
+                                tempRomaji = string.Join("", SentenceToRomaji(tempSentence).Select(p => p.Romaji));//尝试替换后的句子的罗马音
+                                var tempHanMatches = regex.Matches(tempRomaji);
+                                if (tempHanMatches.Any(p => p.Success) == false)//如果这时罗马音已经全英文了，说明这个尝试替换后的句子是没问题的，可以break了；如果还没全英文，就继续替换下一个字符
+                                    break;
+                            }
+                            units = SentenceToRomaji(tempSentence);
+                        }
+                    }
+
                     multiUnits.Add(units);
                 }
 
