@@ -7,19 +7,24 @@
                      xmlns:AduSkin="clr-namespace:AduSkin.Controls.Metro;assembly=AduSkin"
                      mc:Ignorable="d"
                      BorderBrush="{DynamicResource DefaultBrush}"
-                     Title="RomajiConverter" MinWidth="1300" MinHeight="600" Width="1300" Height="600" Icon="/favicon.ico" BorderThickness="0" WindowStyle="None" Closing="MetroWindow_Closing">
-    <AduSkin:MetroWindow.Menu>
-        <AduSkin:MetroTitleMenu Height="40">
-            <AduSkin:MetroTitleMenuItem Header="关于" Click="MetroTitleMenuItem_Click"></AduSkin:MetroTitleMenuItem>
-        </AduSkin:MetroTitleMenu>
-    </AduSkin:MetroWindow.Menu>
+                     Title="RomajiConverter" MinWidth="1300" MinHeight="500" Width="1300" Height="500" Icon="/favicon.ico" BorderThickness="0" WindowStyle="None" Closing="MetroWindow_Closing">
     <AduSkin:MetroWindow.Resources>
         <Style TargetType="Separator">
             <Setter Property="Margin" Value="4,0,4,5"></Setter>
             <Setter Property="Background" Value="#d9d9d9"></Setter>
         </Style>
     </AduSkin:MetroWindow.Resources>
-    <Grid>
+    <AduSkin:MetroWindow.Menu>
+        <AduSkin:MetroTitleMenu Height="40">
+            <AduSkin:MetroTitleMenuItem Header="版本切换">
+                <AduSkin:AduRadioButton Content="简易" GroupName="Version" IsChecked="True" Checked="EasyRadioButton_Checked" ></AduSkin:AduRadioButton>
+                <AduSkin:AduRadioButton Content="详细" GroupName="Version" IsChecked="False" Checked="DetailRadioButton_Checked"></AduSkin:AduRadioButton>
+            </AduSkin:MetroTitleMenuItem>
+            <AduSkin:MetroTitleMenuItem Header="帮助" Click="HelpMenuItem_Click"></AduSkin:MetroTitleMenuItem>
+            <AduSkin:MetroTitleMenuItem Header="关于" Click="InfoMenuItem_Click"></AduSkin:MetroTitleMenuItem>
+        </AduSkin:MetroTitleMenu>
+    </AduSkin:MetroWindow.Menu>
+    <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="40px"/>
             <RowDefinition Height="*"/>
@@ -36,7 +41,7 @@
         <AduSkin:AduFlatButton x:Name="SaveButton" Grid.Row="0" Grid.Column="1" Content="导出" Width="60" Height="30" HorizontalAlignment="Left" Margin="63,0,0,0" Background="{DynamicResource DefaultBrush}" Click="SaveButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ConvertPictureButton" Grid.Row="0" Grid.Column="1" Content="生成图片" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,77,0" Background="{DynamicResource DefaultBrush}" Click="ConvertPictureButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ConvertTextButton" Grid.Row="0" Grid.Column="1" Content="生成文本" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="{DynamicResource DefaultBrush}" Click="ConvertTextButton_Click"/>
-        <Border Background="White" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5" BorderThickness="1" CornerRadius="2" BorderBrush="#d9d9d9">
+        <Border x:Name="EditBorder" Background="White" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5" BorderThickness="1" CornerRadius="2" BorderBrush="#d9d9d9">
             <ScrollViewer>
                 <StackPanel x:Name="EditPanel" Margin="3">
                 </StackPanel>

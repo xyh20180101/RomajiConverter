@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,6 +51,7 @@ namespace RomajiConverter
             CHCheckBox.Checked += CheckBox_Checked;
             CHCheckBox.Unchecked += CheckBox_Unchecked;
             this.Title = $"RomajiConverter ({System.Reflection.Assembly.GetExecutingAssembly().GetName().Version})";
+            IsDetailMode = false;
         }
 
         private async void ImportCloudMusicButton_Click(object sender, RoutedEventArgs e)
@@ -83,7 +85,11 @@ namespace RomajiConverter
         private void Convert()
         {
             _convertedLineList = RomajiHelper.ToRomaji(InputTextBox.Text);
-            RenderEditPanel();
+
+            if (IsDetailMode)
+                RenderEditPanel();
+            else
+                OutputTextBox.Text = GetResultText();
         }
 
         private void RenderEditPanel()
@@ -127,12 +133,11 @@ namespace RomajiConverter
 
         private void MetroWindow_Closing(object sender, EventArgs e)
         {
-            //Environment.Exit(0);
-        }
-
-        private void MetroTitleMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            new InfoWindow().ShowDialog();
+            foreach (Window window in App.Current.Windows)
+            {
+                if (window != this)
+                    window.Close();
+            }
         }
 
         private void CopyButton_Click(object sender, RoutedEventArgs e)
@@ -191,13 +196,82 @@ namespace RomajiConverter
 
         private void ConvertPictureButton_Click(object sender, RoutedEventArgs e)
         {
+            new PictureSettingWindow().ShowDialog();
+            /*
             var sfd = new SaveFileDialog();
             sfd.Filter = "png|*.png";
             if (sfd.ShowDialog().Value)
             {
                 using var image = _convertedLineList.ToImage(GenerateImageHelper.ImageSetting.Default);
                 image.Save(sfd.FileName, ImageFormat.Png);
+            }*/
+        }
+
+        #region 菜单顶栏
+
+        private bool _isDetailMode = false;
+        public bool IsDetailMode
+        {
+            get => _isDetailMode;
+            set
+            {
+                _isDetailMode = value;
+                SwitchMode(_isDetailMode);
             }
         }
+
+        private void SwitchMode(bool isDetailMode)
+        {
+            if (this.IsInitialized)
+            {
+                if (isDetailMode)
+                {
+                    this.Width = 1300;
+                    this.MinWidth = 1300;
+                    MainGrid.ColumnDefinitions.Insert(1, new ColumnDefinition());
+                    ReadButton.Visibility = Visibility.Visible;
+                    SaveButton.Visibility = Visibility.Visible;
+                    ConvertPictureButton.Visibility = Visibility.Visible;
+                    ConvertTextButton.Visibility = Visibility.Visible;
+                    EditBorder.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    ReadButton.Visibility = Visibility.Hidden;
+                    SaveButton.Visibility = Visibility.Hidden;
+                    ConvertPictureButton.Visibility = Visibility.Hidden;
+                    ConvertTextButton.Visibility = Visibility.Hidden;
+                    EditBorder.Visibility = Visibility.Hidden;
+                    MainGrid.ColumnDefinitions.RemoveAt(1);
+                    this.MinWidth = 900;
+                    this.Width = 900;
+                }
+            }
+        }
+
+        private void EasyRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            //不会做绑定
+            IsDetailMode = false;
+        }
+
+        private void DetailRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            //不会做绑定
+            IsDetailMode = true;
+        }
+
+
+        private void HelpMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            new HelpWindow().Show();
+        }
+
+        private void InfoMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            new InfoWindow().Show();
+        }
+
+        #endregion
     }
 }
