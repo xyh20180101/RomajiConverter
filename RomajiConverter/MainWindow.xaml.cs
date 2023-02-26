@@ -33,11 +33,29 @@ namespace RomajiConverter
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        /// <summary>
+        /// 当前的转换结果集合
+        /// </summary>
         private List<ConvertedLine> _convertedLineList = new List<ConvertedLine>();
+
+        /// <summary>
+        /// 简易模式最窄宽度
+        /// </summary>
+        private const int _simpleModeMinWidth = 900;
+
+        /// <summary>
+        /// 详细模式最窄宽度
+        /// </summary>
+        private const int _detailModeMinWidth = 1200;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            IsDetailMode = ((App)Application.Current).Config.IsDetailMode;
+            SimpleRadioButton.IsChecked = !IsDetailMode;
+            DetailRadioButton.IsChecked = IsDetailMode;
+
             SpaceCheckBox.Checked += CheckBox_Checked;
             SpaceCheckBox.Unchecked += CheckBox_Unchecked;
             NewLineCheckBox.Checked += CheckBox_Checked;
@@ -48,8 +66,10 @@ namespace RomajiConverter
             JPCheckBox.Unchecked += CheckBox_Unchecked;
             CHCheckBox.Checked += CheckBox_Checked;
             CHCheckBox.Unchecked += CheckBox_Unchecked;
+            SimpleRadioButton.Checked += SimpleRadioButton_Checked;
+            DetailRadioButton.Checked += DetailRadioButton_Checked;
+
             this.Title = $"RomajiConverter ({System.Reflection.Assembly.GetExecutingAssembly().GetName().Version})";
-            IsDetailMode = false;
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -143,7 +163,7 @@ namespace RomajiConverter
 
         private void MetroWindow_Closing(object sender, EventArgs e)
         {
-            foreach (Window window in App.Current.Windows)
+            foreach (Window window in Application.Current.Windows)
             {
                 if (window != this)
                     window.Close();
@@ -206,39 +226,36 @@ namespace RomajiConverter
 
         private void ConvertPictureButton_Click(object sender, RoutedEventArgs e)
         {
-            new PictureSettingWindow().ShowDialog();
-            /*
-            var sfd = new SaveFileDialog();
-            sfd.Filter = "png|*.png";
-            if (sfd.ShowDialog().Value)
-            {
-                using var image = _convertedLineList.ToImage(GenerateImageHelper.ImageSetting.Default);
-                image.Save(sfd.FileName, ImageFormat.Png);
-            }*/
+            new PictureSettingWindow(_convertedLineList).ShowDialog();
         }
 
         #region 菜单顶栏
 
-        private bool _isDetailMode = false;
+        private bool _isDetailMode;
         public bool IsDetailMode
         {
             get => _isDetailMode;
             set
             {
                 _isDetailMode = value;
+                ((App)Application.Current).Config.IsDetailMode = _isDetailMode;
                 SwitchMode(_isDetailMode);
             }
         }
 
+        /// <summary>
+        /// 切换简易/详细界面
+        /// </summary>
+        /// <param name="isDetailMode"></param>
         private void SwitchMode(bool isDetailMode)
         {
             if (this.IsInitialized)
             {
                 if (isDetailMode)
                 {
-                    this.Width = 1300;
-                    this.MinWidth = 1300;
-                    MainGrid.ColumnDefinitions.Insert(1, new ColumnDefinition());
+                    this.Width = _detailModeMinWidth;
+                    this.MinWidth = _detailModeMinWidth;
+                    if (MainGrid.ColumnDefinitions.Count == 2) MainGrid.ColumnDefinitions.Insert(1, new ColumnDefinition());
                     ReadButton.Visibility = Visibility.Visible;
                     SaveButton.Visibility = Visibility.Visible;
                     ConvertPictureButton.Visibility = Visibility.Visible;
@@ -252,25 +269,22 @@ namespace RomajiConverter
                     ConvertPictureButton.Visibility = Visibility.Hidden;
                     ConvertTextButton.Visibility = Visibility.Hidden;
                     EditBorder.Visibility = Visibility.Hidden;
-                    MainGrid.ColumnDefinitions.RemoveAt(1);
-                    this.MinWidth = 900;
-                    this.Width = 900;
+                    if (MainGrid.ColumnDefinitions.Count == 3) MainGrid.ColumnDefinitions.RemoveAt(1);
+                    this.MinWidth = _simpleModeMinWidth;
+                    this.Width = _simpleModeMinWidth;
                 }
             }
         }
 
-        private void EasyRadioButton_Checked(object sender, RoutedEventArgs e)
+        private void SimpleRadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            //不会做绑定
             IsDetailMode = false;
         }
 
         private void DetailRadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            //不会做绑定
             IsDetailMode = true;
         }
-
 
         private void HelpMenuItem_Click(object sender, RoutedEventArgs e)
         {

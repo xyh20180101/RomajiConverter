@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using WanaKanaSharp;
 using NTextCat;
+using RomajiConverter.Extensions;
 
 namespace RomajiConverter.Helper
 {

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
+using RomajiConverter.Extensions;
 using RomajiConverter.Models;
 
 namespace RomajiConverter.Helper
@@ -25,8 +26,8 @@ namespace RomajiConverter.Helper
             var brush = new SolidBrush(setting.FontColor);
             var background = setting.BackgroundColor;
 
-            var maxLength = list.Select(p => p.Units.Sum(q => q.GetUnitLength(font))).Max();
-            var mL = list.Select(p => p.Units.Length).Max();
+            var maxLength = list.Any() ? list.Select(p => p.Units.Sum(q => q.GetUnitLength(font))).Max() : 0;
+            var mL = list.Any() ? list.Select(p => p.Units.Length).Max() : 0;
             var width = maxLength + mL * paddingX + margin * 2;
             var height = list.Count * (2 * fontSize + paddingInnerY) + list.Count * paddingY + margin * 2;
             var image = new Bitmap(width, height);
@@ -93,7 +94,7 @@ namespace RomajiConverter.Helper
             public static ImageSetting Default => new ImageSetting
             {
                 FontFamilyName = "微软雅黑",
-                FontPixelSize = 480,
+                FontPixelSize = 48,
                 Margin = 24,
                 PaddingX = 0,
                 PaddingY = 48,
@@ -101,6 +102,23 @@ namespace RomajiConverter.Helper
                 BackgroundColor = Color.White,
                 FontColor = Color.Black
             };
+
+            public ImageSetting()
+            {
+
+            }
+
+            public ImageSetting(App.MyConfig config)
+            {
+                FontFamilyName = config.FontFamilyName;
+                FontPixelSize = config.FontPixelSize;
+                Margin = config.Margin;
+                PaddingX = config.PaddingX;
+                PaddingY = config.PaddingY;
+                PaddingInnerY = config.PaddingInnerY;
+                BackgroundColor = ((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(config.BackgroundColor)).ToDrawingColor();
+                FontColor = ((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(config.FontColor)).ToDrawingColor();
+            }
 
             public string FontFamilyName { get; set; }
 
