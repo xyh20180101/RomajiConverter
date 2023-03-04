@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RomajiConverter.Controls;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using RomajiConverter.Controls;
-using RomajiConverter.Models;
 
 namespace RomajiConverter
 {
@@ -25,17 +15,26 @@ namespace RomajiConverter
         public EditableLabel()
         {
             InitializeComponent();
-            base.DataContext = this;
+            DataContext = this;
             IsEdit = false;
         }
 
-        public static readonly DependencyProperty UnitProperty = DependencyProperty.Register("Unit", typeof(ConvertedUnit), typeof(EditableLabel), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(EditableLabel), new PropertyMetadata(default(string)));
 
         [Category("Extension")]
-        public ConvertedUnit Unit
+        public string Text
         {
-            get => (ConvertedUnit)GetValue(UnitProperty);
-            set => SetValue(UnitProperty, value);
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
+        }
+
+        public static readonly DependencyProperty MyFontSizeProperty = DependencyProperty.Register("MyFontSize", typeof(double), typeof(EditableLabel), new PropertyMetadata(12d));
+
+        [Category("Extension")]
+        public double MyFontSize
+        {
+            get => (double)GetValue(MyFontSizeProperty);
+            set => SetValue(MyFontSizeProperty, value);
         }
 
         private bool _isEdit;

@@ -4,9 +4,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Forms;
 using RomajiConverter.Extensions;
 using RomajiConverter.Models;
 

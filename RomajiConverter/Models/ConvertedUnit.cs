@@ -8,10 +8,11 @@ namespace RomajiConverter.Models
 {
     public class ConvertedUnit : INotifyPropertyChanged
     {
-        public ConvertedUnit(string japanese, string romaji)
+        public ConvertedUnit(string japanese, string hiragana, string romaji)
         {
             Japanese = japanese;
             Romaji = romaji;
+            Hiragana = hiragana;
         }
 
         private string _japanese;
@@ -34,6 +35,17 @@ namespace RomajiConverter.Models
             {
                 _romaji = value;
                 OnPropertyChanged("Romaji");
+            }
+        }
+
+        private string _hiragana;
+        public string Hiragana
+        {
+            get => _hiragana;
+            set
+            {
+                _hiragana = value;
+                OnPropertyChanged("Hiragana");
             }
         }
 

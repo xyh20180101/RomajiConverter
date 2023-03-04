@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using WanaKanaSharp;
-using NTextCat;
 using RomajiConverter.Extensions;
 
 namespace RomajiConverter.Helper
@@ -20,7 +19,7 @@ namespace RomajiConverter.Helper
         private static MeCabTagger _tagger;
 
         /// <summary>
-        /// 自定义词典
+        /// 自定义词典<原文,假名>
         /// </summary>
         private static Dictionary<string, string> _customizeDict;
 
@@ -41,7 +40,8 @@ namespace RomajiConverter.Helper
                 if (string.IsNullOrWhiteSpace(item)) continue;
                 var array = item.Split(" ");
                 if (array.Length < 2) continue;
-                _customizeDict.Add(array[0], array[1]);
+                if (!_customizeDict.ContainsKey(array[0]))
+                    _customizeDict.Add(array[0], array[1]);
             }
         }
 
@@ -79,7 +79,7 @@ namespace RomajiConverter.Helper
                 {
                     if (IsEnglish(sentence))
                     {
-                        multiUnits.Add(new[] { new ConvertedUnit(sentence, sentence) });
+                        multiUnits.Add(new[] { new ConvertedUnit(sentence, sentence, sentence) });
                         continue;
                     }
                     ConvertedUnit[] units = SentenceToRomaji(sentence);
@@ -230,32 +230,32 @@ namespace RomajiConverter.Helper
                     if (TryCustomConvert(item.Surface, out var customResult))
                     {
                         //用户自定义词典
-                        result.Add(new ConvertedUnit(item.Surface, customResult));
+                        result.Add(new ConvertedUnit(item.Surface, customResult, WanaKana.ToRomaji(customResult)));
                     }
                     else if (features.Length > 0 && features[0] != "助詞" && IsJapanese(item.Surface))
                     {
                         //纯假名
-                        result.Add(new ConvertedUnit(item.Surface, WanaKana.ToRomaji(item.Surface)));
+                        result.Add(new ConvertedUnit(item.Surface, KanaConverter.ToHiragana(item.Surface), WanaKana.ToRomaji(item.Surface)));
                     }
                     else if (features.Length <= 6 || new string[] { "補助記号" }.Contains(features[0]))
                     {
                         //标点符号
-                        result.Add(new ConvertedUnit(item.Surface, item.Surface));
+                        result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface));
                     }
                     else if (IsEnglish(item.Surface))
                     {
                         //英文
-                        result.Add(new ConvertedUnit(item.Surface, item.Surface));
+                        result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface));
                     }
                     else
                     {
                         //汉字
-                        result.Add(new ConvertedUnit(item.Surface, WanaKana.ToRomaji(features[ChooseIndexByType(features[0])])));
+                        result.Add(new ConvertedUnit(item.Surface, KanaConverter.ToHiragana(features[ChooseIndexByType(features[0])]), WanaKana.ToRomaji(features[ChooseIndexByType(features[0])])));
                     }
                 }
                 else if (item.Stat != MeCabNodeStat.Bos && item.Stat != MeCabNodeStat.Eos)
                 {
-                    result.Add(new ConvertedUnit(item.Surface, item.Surface));
+                    result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface));
                 }
             }
 
@@ -294,6 +294,47 @@ namespace RomajiConverter.Helper
                 result = "";
                 return false;
             }
+        }
+    }
+
+    public static class KanaConverter
+    {
+        /// <summary>
+        /// 转为片假名
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string ToKatakana(string str)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var c in str)
+            {
+                var bytes = Encoding.Unicode.GetBytes(c.ToString());
+                if (bytes.Length == 2 && bytes[1] == 0x30 && bytes[0] >= 0x40 && bytes[0] <= 0x9F)
+                    stringBuilder.Append(Encoding.Unicode.GetString(new byte[] { (byte)(bytes[0] + 0x60), bytes[1] }));
+                else
+                    stringBuilder.Append(c);
+            }
+            return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 转为平假名
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string ToHiragana(string str)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var c in str)
+            {
+                var bytes = Encoding.Unicode.GetBytes(c.ToString());
+                if (bytes.Length == 2 && bytes[1] == 0x30 && bytes[0] >= 0xA0 && bytes[0] <= 0xFF)
+                    stringBuilder.Append(Encoding.Unicode.GetString(new byte[] { (byte)(bytes[0] - 0x60), bytes[1] }));
+                else
+                    stringBuilder.Append(c);
+            }
+            return stringBuilder.ToString();
         }
     }
 }

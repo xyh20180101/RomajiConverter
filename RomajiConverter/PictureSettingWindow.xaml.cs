@@ -1,10 +1,6 @@
 ﻿using AduSkin.Controls.Metro;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Drawing.Text;
 using System.Windows.Media;
 using RomajiConverter.Extensions;

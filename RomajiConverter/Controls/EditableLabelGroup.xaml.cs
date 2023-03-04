@@ -23,16 +23,44 @@ namespace RomajiConverter.Controls
         public EditableLabelGroup(ConvertedUnit unit)
         {
             InitializeComponent();
-            GroupUnit = unit;
+            DataContext = this;
+            Unit = unit;
         }
 
-        public static readonly DependencyProperty GroupUnitProperty = DependencyProperty.Register("GroupUnit", typeof(ConvertedUnit), typeof(EditableLabelGroup), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty UnitProperty = DependencyProperty.Register("Unit", typeof(ConvertedUnit), typeof(EditableLabelGroup));
 
         [Category("Extension")]
-        public ConvertedUnit GroupUnit
+        public ConvertedUnit Unit
         {
-            get => (ConvertedUnit)GetValue(GroupUnitProperty);
-            set => SetValue(GroupUnitProperty, value);
+            get => (ConvertedUnit)GetValue(UnitProperty);
+            set => SetValue(UnitProperty, value);
+        }
+
+        public static readonly DependencyProperty RomajiVisibilityProperty = DependencyProperty.Register("RomajiVisibility", typeof(Visibility), typeof(EditableLabelGroup));
+
+        [Category("Extension")]
+        public Visibility RomajiVisibility
+        {
+            get => (Visibility)GetValue(RomajiVisibilityProperty);
+            set => SetValue(RomajiVisibilityProperty, value);
+        }
+
+        public static readonly DependencyProperty HiraganaVisibilityProperty = DependencyProperty.Register("HiraganaVisibility", typeof(Visibility), typeof(EditableLabelGroup));
+
+        [Category("Extension")]
+        public Visibility HiraganaVisibility
+        {
+            get => (Visibility)GetValue(HiraganaVisibilityProperty);
+            set => SetValue(HiraganaVisibilityProperty, value);
+        }
+
+        public static readonly DependencyProperty MyFontSizeProperty = DependencyProperty.Register("MyFontSize", typeof(double), typeof(EditableLabelGroup),new PropertyMetadata(12d));
+
+        [Category("Extension")]
+        public double MyFontSize
+        {
+            get => (double)GetValue(MyFontSizeProperty);
+            set => SetValue(MyFontSizeProperty, value);
         }
     }
 }
