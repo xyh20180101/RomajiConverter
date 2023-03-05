@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="RomajiConverter.Controls.ScaleLabel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RomajiConverter.Controls"
+             mc:Ignorable="d">
+    <Grid>
+        <Label x:Name="Label1" Content="{Binding ScaleText,NotifyOnTargetUpdated=True}" Background="#11000000" FontSize="10px">
+            <Label.Triggers>
+                <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="Label1" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1.5"></DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Label.Triggers>
+        </Label>
+    </Grid>
+</UserControl>

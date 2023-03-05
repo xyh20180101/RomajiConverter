@@ -59,6 +59,10 @@ namespace RomajiConverter
             {
                 DefaultBrush = "#FFFF6666";
                 IsDetailMode = false;
+                InputTextBoxFontSize = 12;
+                EditPanelFontSize = 12;
+                OutputTextBoxFontSize = 12;
+                IsOpenExplorerAfterSaveImage = true;
 
                 InitImageSetting();
             }
@@ -75,11 +79,19 @@ namespace RomajiConverter
                 PaddingInnerY = 12;
             }
 
-            #region 窗体主题
+            #region 通用设置
 
             public string DefaultBrush { get; set; }
 
             public bool IsDetailMode { get; set; }
+
+            public double InputTextBoxFontSize { get; set; }
+
+            public double EditPanelFontSize { get; set; }
+
+            public double OutputTextBoxFontSize { get; set; }
+
+            public bool IsOpenExplorerAfterSaveImage { get; set; }
 
             #endregion
 

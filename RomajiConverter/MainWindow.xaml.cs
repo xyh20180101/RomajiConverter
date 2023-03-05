@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,7 +23,7 @@ namespace RomajiConverter
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : MetroWindow, INotifyPropertyChanged
     {
         /// <summary>
         /// 当前的转换结果集合
@@ -37,9 +40,21 @@ namespace RomajiConverter
         /// </summary>
         private const int _detailModeMinWidth = 1200;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
             IsDetailMode = ((App)Application.Current).Config.IsDetailMode;
             SimpleRadioButton.IsChecked = !IsDetailMode;
@@ -288,7 +303,17 @@ namespace RomajiConverter
 
         private void ConvertPictureButton_Click(object sender, RoutedEventArgs e)
         {
-            new PictureSettingWindow(_convertedLineList).ShowDialog();
+            var sfd = new SaveFileDialog();
+            sfd.Filter = "png|*.png";
+            if (sfd.ShowDialog().Value)
+            {
+                using var image = _convertedLineList.ToImage(new GenerateImageHelper.ImageSetting(((App)Application.Current).Config));
+                image.Save(sfd.FileName, ImageFormat.Png);
+                /*
+                var psi = new ProcessStartInfo() { FileName = sfd.FileName, UseShellExecute = true };
+                Process.Start(psi);*/
+                Process.Start("explorer.exe", $"/select,\"{sfd.FileName}\"");
+            }
         }
 
         private void ConvertTextButton_Click(object sender, RoutedEventArgs e)
@@ -315,6 +340,7 @@ namespace RomajiConverter
             }
         }
 
+        private ColumnDefinition _editColumnDefinition = new ColumnDefinition();
         /// <summary>
         /// 切换简易/详细界面
         /// </summary>
@@ -327,7 +353,7 @@ namespace RomajiConverter
                 {
                     this.Width = _detailModeMinWidth;
                     this.MinWidth = _detailModeMinWidth;
-                    if (MainGrid.ColumnDefinitions.Count == 2) MainGrid.ColumnDefinitions.Insert(1, new ColumnDefinition());
+                    if (MainGrid.ColumnDefinitions.Count == 2) MainGrid.ColumnDefinitions.Insert(1, _editColumnDefinition);
                     ReadButton.Visibility = Visibility.Visible;
                     SaveButton.Visibility = Visibility.Visible;
                     EditHiraganaCheckBox.Visibility = Visibility.Visible;
@@ -345,6 +371,7 @@ namespace RomajiConverter
                     ConvertPictureButton.Visibility = Visibility.Collapsed;
                     ConvertTextButton.Visibility = Visibility.Collapsed;
                     EditBorder.Visibility = Visibility.Collapsed;
+                    _editColumnDefinition = MainGrid.ColumnDefinitions[1];
                     if (MainGrid.ColumnDefinitions.Count == 3) MainGrid.ColumnDefinitions.RemoveAt(1);
                     this.MinWidth = _simpleModeMinWidth;
                     this.Width = _simpleModeMinWidth;
@@ -362,43 +389,87 @@ namespace RomajiConverter
             IsDetailMode = true;
         }
 
-        private void HelpMenuItem_Click(object sender, RoutedEventArgs e)
+        private void SettingMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            new HelpWindow().Show();
-        }
-
-        private void InfoMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            new InfoWindow().Show();
+            new SettingWindow().Show();
         }
 
         #endregion
 
+        #region 文本缩放相关
+
+        /// <summary>
+        /// 输入文本框缩放值
+        /// </summary>
+        public string InputTextBoxScale
+        {
+            get
+            {
+                return _inputTextBoxScale;
+            }
+            set
+            {
+                _inputTextBoxScale = value;
+                OnPropertyChanged("InputTextBoxScale");
+            }
+        }
+
+        private string _inputTextBoxScale = "100%";
+
+        /// <summary>
+        /// 输入文本框缩放事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void InputTextBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                if (e.Delta < 0 && InputTextBox.FontSize > 8)
+                if (e.Delta < 0 && InputTextBox.FontSize > 2.64)
                 {
                     InputTextBox.FontSize /= 1.1;
                 }
-                else if (e.Delta > 0 && InputTextBox.FontSize < 40)
+                else if (e.Delta > 0 && InputTextBox.FontSize < 41.5)
                 {
                     InputTextBox.FontSize *= 1.1;
                 }
+                InputTextBoxScale = (int)Math.Round(InputTextBox.FontSize / 12 * 100) + "%";
                 e.Handled = true;
             }
         }
 
-        private double _editableLabelGroupFontSize = 12;
+        /// <summary>
+        /// 编辑区缩放值
+        /// </summary>
+        public string EditPanelScale
+        {
+            get
+            {
+                return _editPanelScale;
+            }
+            set
+            {
+                _editPanelScale = value;
+                OnPropertyChanged("EditPanelScale");
+            }
+        }
 
+        private string _editPanelScale = "100%";
+
+        private double _editPanelFontSize = 12;
+
+        /// <summary>
+        /// 编辑区缩放事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                if (e.Delta < 0 && _editableLabelGroupFontSize > 8)
+                if (e.Delta < 0 && _editPanelFontSize > 2.64)
                 {
-                    _editableLabelGroupFontSize /= 1.1;
+                    _editPanelFontSize /= 1.1;
                     foreach (object children in EditPanel.Children)
                     {
                         WrapPanel wrapPanel;
@@ -409,13 +480,13 @@ namespace RomajiConverter
 
                         foreach (EditableLabelGroup editableLabelGroup in wrapPanel.Children)
                         {
-                            editableLabelGroup.MyFontSize = _editableLabelGroupFontSize;
+                            editableLabelGroup.MyFontSize = _editPanelFontSize;
                         }
                     }
                 }
-                else if (e.Delta > 0 && _editableLabelGroupFontSize < 40)
+                else if (e.Delta > 0 && _editPanelFontSize < 41.5)
                 {
-                    _editableLabelGroupFontSize *= 1.1;
+                    _editPanelFontSize *= 1.1;
                     foreach (object children in EditPanel.Children)
                     {
                         WrapPanel wrapPanel;
@@ -426,28 +497,55 @@ namespace RomajiConverter
 
                         foreach (EditableLabelGroup editableLabelGroup in wrapPanel.Children)
                         {
-                            editableLabelGroup.MyFontSize = _editableLabelGroupFontSize;
+                            editableLabelGroup.MyFontSize = _editPanelFontSize;
                         }
                     }
                 }
+                EditPanelScale = (int)Math.Round(_editPanelFontSize / 12 * 100) + "%";
                 e.Handled = true;
             }
         }
 
+        /// <summary>
+        /// 输出文本框缩放值
+        /// </summary>
+        public string OutputTextBoxScale
+        {
+            get
+            {
+                return _outputTextBoxScale;
+            }
+            set
+            {
+                _outputTextBoxScale = value;
+                OnPropertyChanged("OutputTextBoxScale");
+            }
+        }
+
+        private string _outputTextBoxScale = "100%";
+
+        /// <summary>
+        /// 输出文本框缩放事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OutputTextBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                if (e.Delta < 0 && OutputTextBox.FontSize > 8)
+                if (e.Delta < 0 && OutputTextBox.FontSize > 2.64)
                 {
                     OutputTextBox.FontSize /= 1.1;
                 }
-                else if (e.Delta > 0 && OutputTextBox.FontSize < 40)
+                else if (e.Delta > 0 && OutputTextBox.FontSize < 41.5)
                 {
                     OutputTextBox.FontSize *= 1.1;
                 }
+                OutputTextBoxScale = (int)Math.Round(OutputTextBox.FontSize / 12 * 100) + "%";
                 e.Handled = true;
             }
         }
+
+        #endregion
     }
 }
