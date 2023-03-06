@@ -9,9 +9,9 @@
              x:Name="Group">
     <Grid>
         <StackPanel>
-            <romajiConverter:EditableLabel Text="{Binding Unit.Romaji,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding RomajiVisibility,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MyFontSize="{Binding Path=MyFontSize,ElementName=Group,UpdateSourceTrigger=PropertyChanged}"></romajiConverter:EditableLabel>
-            <romajiConverter:EditableLabel Text="{Binding Unit.Hiragana,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HiraganaVisibility,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MyFontSize="{Binding Path=MyFontSize,ElementName=Group,UpdateSourceTrigger=PropertyChanged}"></romajiConverter:EditableLabel>
-            <Label Padding="5,0,5,5" Content="{Binding Unit.Japanese,ElementName=Group,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{Binding Path=MyFontSize,UpdateSourceTrigger=PropertyChanged}"></Label>
+            <romajiConverter:EditableLabel Text="{Binding Unit.Romaji,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding RomajiVisibility,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MyFontSize="{Binding Path=MyFontSize,Mode=TwoWay,ElementName=Group,UpdateSourceTrigger=PropertyChanged}"></romajiConverter:EditableLabel>
+            <romajiConverter:EditableLabel Text="{Binding Unit.Hiragana,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HiraganaVisibility,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MyFontSize="{Binding Path=MyFontSize,Mode=TwoWay,ElementName=Group,UpdateSourceTrigger=PropertyChanged}"></romajiConverter:EditableLabel>
+            <Label Padding="5,0,5,5" Content="{Binding Unit.Japanese,ElementName=Group,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{Binding Path=MyFontSize,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></Label>
         </StackPanel>
     </Grid>
 </UserControl>

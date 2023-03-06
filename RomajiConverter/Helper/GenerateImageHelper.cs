@@ -4,14 +4,16 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
+using System.Windows.Media;
 using RomajiConverter.Extensions;
 using RomajiConverter.Models;
+using Color = System.Drawing.Color;
 
 namespace RomajiConverter.Helper
 {
     public static class GenerateImageHelper
     {
-        public static Bitmap ToImage(this List<ConvertedLine> list, ImageSetting setting)
+        public static Bitmap ToImage(this List<string[][]> list, ImageSetting setting)
         {
             var fontSize = setting.FontPixelSize;
             var margin = setting.Margin;
@@ -23,8 +25,8 @@ namespace RomajiConverter.Helper
             var brush = new SolidBrush(setting.FontColor);
             var background = setting.BackgroundColor;
 
-            var maxLength = list.Any() ? list.Select(p => p.Units.Sum(q => q.GetUnitLength(font))).Max() : 0;
-            var mL = list.Any() ? list.Select(p => p.Units.Length).Max() : 0;
+            var maxLength = list.Any() ? list.Select(p => p.Sum(q => GetUnitLength(q, font))).Max() : 0;
+            var mL = list.Any() ? list.Select(p => p.Length).Max() : 0;
             var width = maxLength + mL * paddingX + margin * 2;
             var height = list.Count * (2 * fontSize + paddingInnerY) + list.Count * paddingY + margin * 2;
             var image = new Bitmap(width, height);
@@ -41,65 +43,51 @@ namespace RomajiConverter.Helper
             for (var i = 0; i < list.Count; i++)
             {
                 var line = list[i];
-                var frontUnitLength = margin + paddingX;
-                foreach (var unit in line.Units)
+                var startX = margin + paddingX;
+                foreach (var unit in line)
                 {
-                    var x1 = frontUnitLength;
-                    var x2 = frontUnitLength;
-
-                    var s = unit.GetUnitShortOffset(font);
-                    switch (s.Index)
+                    var unitLength = GetUnitLength(unit, font);
+                    var renderXArray = unit.Select(str => startX + GetStringXOffset(str, font, unitLength)).ToArray();
+                    var renderYArray = unit.Select((str, index) =>
+                    margin + (fontSize * unit.Length + paddingInnerY + paddingY) * i + index * (fontSize + paddingInnerY)).ToArray();
+                    for (var j = 0; j < unit.Length; j++)
                     {
-                        case 0: x1 += s.Length; break;
-                        case 1: x2 += s.Length; break;
+                        g1.DrawString(unit[j], font, brush, new PointF(renderXArray[j], renderYArray[j]));
                     }
-
-                    var y1 = margin + (fontSize * 2 + paddingInnerY + paddingY) * i;
-                    var y2 = margin + (fontSize * 2 + paddingInnerY + paddingY) * i + fontSize + paddingInnerY;
-
-                    {
-                        g1.DrawString(unit.Romaji, font, brush, new PointF(x1, y1));
-                        g1.DrawString(unit.Japanese, font, brush, new PointF(x2, y2));
-                    }
-
-                    frontUnitLength += unit.GetUnitLength(font) + paddingX;
+                    startX += unitLength + paddingX;
                 }
             }
 
             return image;
         }
 
-        private static int GetUnitLength(this ConvertedUnit unit, Font font)
+        /// <summary>
+        /// 获取单元长度(最长字符串渲染长度)
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <param name="font"></param>
+        /// <returns></returns>
+        private static int GetUnitLength(string[] unit, Font font)
         {
             using var g = Graphics.FromImage(new Bitmap(1, 1));
-            var r = (int)g.MeasureString(unit.Romaji, font).Width;
-            var j = (int)g.MeasureString(unit.Japanese, font).Width;
-            return r > j ? r : j;
+            return unit.Any() ? unit.Max(p => (int)g.MeasureString(p, font).Width) : 0;
         }
 
-        private static (int Index, int Length) GetUnitShortOffset(this ConvertedUnit unit, Font font)
+        /// <summary>
+        /// 获取字符串的渲染坐标x轴偏移值
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="font"></param>
+        /// <param name="unitLength"></param>
+        /// <returns></returns>
+        private static int GetStringXOffset(string str, Font font, int unitLength)
         {
             using var g = Graphics.FromImage(new Bitmap(1, 1));
-            var r = (int)g.MeasureString(unit.Romaji, font).Width;
-            var j = (int)g.MeasureString(unit.Japanese, font).Width;
-            var o = Math.Abs((r - j)) / 2;
-            return r < j ? (0, o) : (1, o);
+            return (unitLength - (int)g.MeasureString(str, font).Width) / 2;
         }
 
         public class ImageSetting
         {
-            public static ImageSetting Default => new ImageSetting
-            {
-                FontFamilyName = "微软雅黑",
-                FontPixelSize = 48,
-                Margin = 24,
-                PaddingX = 0,
-                PaddingY = 48,
-                PaddingInnerY = 12,
-                BackgroundColor = Color.White,
-                FontColor = Color.Black
-            };
-
             public ImageSetting()
             {
 

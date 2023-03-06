@@ -16,8 +16,10 @@
         <AduSkin:AduNavigationPanel Grid.Row="0" IndicatorPlacement="Left">
             <AduSkin:MetroScrollViewer HorizontalScrollBarVisibility="Disabled">
                 <StackPanel >
-                    <AduSkin:AduGroupBoxNor Header="界面设置" HeaderPadding="10,6">
-                        <Grid Height="300"></Grid>
+                    <AduSkin:AduGroupBoxNor Header="通用设置" HeaderPadding="10,6">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <AduSkin:AduCheckBox x:Name="IsOpenExplorerAfterSaveImageCheckBox" Margin="-5,20,200,20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="生成图片后打开文件夹" FontSize="12px" />
+                        </Grid>
                     </AduSkin:AduGroupBoxNor>
                     <AduSkin:AduGroupBoxNor Header="图片导出设置" HeaderPadding="10,6">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">

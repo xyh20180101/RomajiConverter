@@ -25,6 +25,7 @@ namespace RomajiConverter.Controls
             InitializeComponent();
             DataContext = this;
             Unit = unit;
+            MyFontSize = ((App)Application.Current).Config.EditPanelFontSize;
         }
 
         public static readonly DependencyProperty UnitProperty = DependencyProperty.Register("Unit", typeof(ConvertedUnit), typeof(EditableLabelGroup));
@@ -54,7 +55,7 @@ namespace RomajiConverter.Controls
             set => SetValue(HiraganaVisibilityProperty, value);
         }
 
-        public static readonly DependencyProperty MyFontSizeProperty = DependencyProperty.Register("MyFontSize", typeof(double), typeof(EditableLabelGroup),new PropertyMetadata(12d));
+        public static readonly DependencyProperty MyFontSizeProperty = DependencyProperty.Register("MyFontSize", typeof(double), typeof(EditableLabelGroup), new PropertyMetadata(12d));
 
         [Category("Extension")]
         public double MyFontSize

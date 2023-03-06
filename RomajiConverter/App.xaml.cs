@@ -55,6 +55,9 @@ namespace RomajiConverter
 
         public class MyConfig
         {
+            /// <summary>
+            /// 默认设置
+            /// </summary>
             public MyConfig()
             {
                 DefaultBrush = "#FFFF6666";
@@ -67,6 +70,9 @@ namespace RomajiConverter
                 InitImageSetting();
             }
 
+            /// <summary>
+            /// 生成图片默认设置
+            /// </summary>
             public void InitImageSetting()
             {
                 FontFamilyName = "微软雅黑";

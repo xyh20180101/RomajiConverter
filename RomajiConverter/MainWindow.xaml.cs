@@ -60,6 +60,9 @@ namespace RomajiConverter
             SimpleRadioButton.IsChecked = !IsDetailMode;
             DetailRadioButton.IsChecked = IsDetailMode;
 
+            InputTextBox.FontSize = ((App)Application.Current).Config.InputTextBoxFontSize;
+            OutputTextBox.FontSize = ((App)Application.Current).Config.OutputTextBoxFontSize;
+
             EditHiraganaCheckBox.Checked += EditHiraganaCheckBox_Checked;
             EditHiraganaCheckBox.Unchecked += EditHiraganaCheckBox_Unchecked;
             EditRomajiCheckBox.Checked += EditRomajiCheckBox_Checked;
@@ -307,12 +310,12 @@ namespace RomajiConverter
             sfd.Filter = "png|*.png";
             if (sfd.ShowDialog().Value)
             {
-                using var image = _convertedLineList.ToImage(new GenerateImageHelper.ImageSetting(((App)Application.Current).Config));
+                var renderData = _convertedLineList.Select(p =>
+                    p.Units.Select(q => new[] { q.Romaji, q.Hiragana, q.Japanese }).ToArray()).ToList();
+                using var image = GenerateImageHelper.ToImage(renderData, new GenerateImageHelper.ImageSetting(((App)Application.Current).Config));
                 image.Save(sfd.FileName, ImageFormat.Png);
-                /*
-                var psi = new ProcessStartInfo() { FileName = sfd.FileName, UseShellExecute = true };
-                Process.Start(psi);*/
-                Process.Start("explorer.exe", $"/select,\"{sfd.FileName}\"");
+                if (((App)Application.Current).Config.IsOpenExplorerAfterSaveImage)
+                    Process.Start("explorer.exe", $"/select,\"{sfd.FileName}\"");
             }
         }
 
@@ -411,10 +414,11 @@ namespace RomajiConverter
             {
                 _inputTextBoxScale = value;
                 OnPropertyChanged("InputTextBoxScale");
+                ((App)Application.Current).Config.InputTextBoxFontSize = InputTextBox.FontSize;
             }
         }
 
-        private string _inputTextBoxScale = "100%";
+        private string _inputTextBoxScale;
 
         /// <summary>
         /// 输入文本框缩放事件
@@ -451,10 +455,11 @@ namespace RomajiConverter
             {
                 _editPanelScale = value;
                 OnPropertyChanged("EditPanelScale");
+                ((App)Application.Current).Config.EditPanelFontSize = _editPanelFontSize;
             }
         }
 
-        private string _editPanelScale = "100%";
+        private string _editPanelScale;
 
         private double _editPanelFontSize = 12;
 
@@ -519,10 +524,11 @@ namespace RomajiConverter
             {
                 _outputTextBoxScale = value;
                 OnPropertyChanged("OutputTextBoxScale");
+                ((App)Application.Current).Config.OutputTextBoxFontSize = OutputTextBox.FontSize;
             }
         }
 
-        private string _outputTextBoxScale = "100%";
+        private string _outputTextBoxScale;
 
         /// <summary>
         /// 输出文本框缩放事件

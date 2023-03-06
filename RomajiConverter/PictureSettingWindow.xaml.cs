@@ -9,6 +9,7 @@ using RomajiConverter.Models;
 using Microsoft.Win32;
 using RomajiConverter.Helper;
 using System.Drawing.Imaging;
+using System.Linq;
 
 namespace RomajiConverter
 {
@@ -76,7 +77,9 @@ namespace RomajiConverter
             sfd.Filter = "png|*.png";
             if (sfd.ShowDialog().Value)
             {
-                using var image = _convertedLineList.ToImage(new GenerateImageHelper.ImageSetting(((App)Application.Current).Config));
+                var renderData = _convertedLineList.Select(p =>
+                    p.Units.Select(q => new[] { q.Romaji, q.Hiragana, q.Japanese }).ToArray()).ToList();
+                using var image = GenerateImageHelper.ToImage(renderData, new GenerateImageHelper.ImageSetting(((App)Application.Current).Config));
                 image.Save(sfd.FileName, ImageFormat.Png);
                 this.Close();
             }
