@@ -299,8 +299,15 @@ namespace RomajiConverter
             ofd.Multiselect = false;
             if (ofd.ShowDialog().Value)
             {
-                _convertedLineList = JsonConvert.DeserializeObject<List<ConvertedLine>>(File.ReadAllText(ofd.FileName));
-                RenderEditPanel();
+                try
+                {
+                    _convertedLineList = JsonConvert.DeserializeObject<List<ConvertedLine>>(File.ReadAllText(ofd.FileName));
+                    RenderEditPanel();
+                }
+                catch (JsonSerializationException exception)
+                {
+                    throw new Exception("不是合法的json文件", exception);
+                }
             }
         }
 
@@ -310,8 +317,22 @@ namespace RomajiConverter
             sfd.Filter = "png|*.png";
             if (sfd.ShowDialog().Value)
             {
-                var renderData = _convertedLineList.Select(p =>
-                    p.Units.Select(q => new[] { q.Romaji, q.Hiragana, q.Japanese }).ToArray()).ToList();
+                var renderData = new List<string[][]>();
+                foreach (var line in _convertedLineList)
+                {
+                    var renderLine = new List<string[]>();
+                    foreach (var unit in line.Units)
+                    {
+                        var renderUnit = new List<string>();
+                        if (GetBool(EditRomajiCheckBox.IsChecked))
+                            renderUnit.Add(unit.Romaji);
+                        if (GetBool(EditHiraganaCheckBox.IsChecked))
+                            renderUnit.Add(unit.Hiragana);
+                        renderUnit.Add(unit.Japanese);
+                        renderLine.Add(renderUnit.ToArray());
+                    }
+                    renderData.Add(renderLine.ToArray());
+                }
                 using var image = GenerateImageHelper.ToImage(renderData, new GenerateImageHelper.ImageSetting(((App)Application.Current).Config));
                 image.Save(sfd.FileName, ImageFormat.Png);
                 if (((App)Application.Current).Config.IsOpenExplorerAfterSaveImage)

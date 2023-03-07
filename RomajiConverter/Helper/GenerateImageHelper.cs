@@ -15,6 +15,9 @@ namespace RomajiConverter.Helper
     {
         public static Bitmap ToImage(this List<string[][]> list, ImageSetting setting)
         {
+            if (list.Any() == false || list[0].Any() == false || list[0][0].Any() == false)
+                return new Bitmap(1, 1);
+
             var fontSize = setting.FontPixelSize;
             var margin = setting.Margin;
             var paddingX = setting.PaddingX;
@@ -25,10 +28,18 @@ namespace RomajiConverter.Helper
             var brush = new SolidBrush(setting.FontColor);
             var background = setting.BackgroundColor;
 
-            var maxLength = list.Any() ? list.Select(p => p.Sum(q => GetUnitLength(q, font))).Max() : 0;
-            var mL = list.Any() ? list.Select(p => p.Length).Max() : 0;
-            var width = maxLength + mL * paddingX + margin * 2;
-            var height = list.Count * (2 * fontSize + paddingInnerY) + list.Count * paddingY + margin * 2;
+            //(最长句的渲染长度,该句的单元数)
+            var longestLine = list.Select(p => new { MaxLength = p.Sum(q => GetUnitLength(q, font)), UnitCount = p.Length })
+                .OrderByDescending(p => p.MaxLength).FirstOrDefault();
+
+            //最长句子的渲染长度
+            var maxLength = longestLine?.MaxLength ?? 0;
+            //最大单元数
+            var maxUnitCount = longestLine?.UnitCount ?? 0;
+            //图片宽度
+            var width = maxLength + maxUnitCount * paddingX + margin * 2;
+            //图片高度
+            var height = list.Count * (list[0][0].Length * fontSize + paddingInnerY) + list.Count * paddingY + margin * 2;
             var image = new Bitmap(width, height);
 
             using var g1 = Graphics.FromImage(image);
