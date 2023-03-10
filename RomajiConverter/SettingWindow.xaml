@@ -8,12 +8,86 @@
                      mc:Ignorable="d"
                      BorderBrush="{DynamicResource DefaultBrush}"
                      Title="设置" Height="350" Width="510" Icon="/favicon.ico" Loaded="MetroWindow_Loaded" ResizeMode="NoResize">
+    <AduSkin:MetroWindow.Resources>
+        <Style x:Key="SegmentItemStyle" TargetType="AduSkin:SegmentItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type AduSkin:SegmentItem}">
+                        <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="true" UseLayoutRounding="True">
+                            <ContentPresenter Margin="20,8,20,8" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!--<Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource DefaultBrush}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource DefaultBrush}" />
+                            </Trigger>-->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                    <Condition Property="IsSelected" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource DefaultBrush}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource DefaultBrush}" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                    <Condition Property="IsSelected" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="{DynamicResource DefaultBrush}" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                    <Condition Property="IsSelected" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="{DynamicResource DefaultBrush}" />
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="#cccccc" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SegmentControlStyle" TargetType="AduSkin:SegmentControl">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="BorderThickness" Value="0,0,1,0" />
+            <Setter Property="BorderBrush" Value="#10000000" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="#000"></Setter>
+        </Style>
+    </AduSkin:MetroWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50px"/>
         </Grid.RowDefinitions>
-        <AduSkin:AduNavigationPanel Grid.Row="0" IndicatorPlacement="Left">
+        <AduSkin:AduNavigationPanel Grid.Row="0" IndicatorPlacement="Left" IndicatorItemContainerStyle="{StaticResource SegmentItemStyle}" IndicatorStyle="{StaticResource SegmentControlStyle}">
             <AduSkin:MetroScrollViewer HorizontalScrollBarVisibility="Disabled">
                 <StackPanel >
                     <AduSkin:AduGroupBoxNor Header="通用设置" HeaderPadding="10,6">
