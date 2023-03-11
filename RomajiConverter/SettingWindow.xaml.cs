@@ -1,18 +1,11 @@
 ﻿using AduSkin.Controls.Metro;
 using RomajiConverter.Extensions;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Text;
-using System.Text;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace RomajiConverter
 {
@@ -26,6 +19,7 @@ namespace RomajiConverter
             InitializeComponent();
 
             InitFontFamily();
+            InitHelpLabel();
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -93,11 +87,20 @@ namespace RomajiConverter
 
         private void DefaultButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = AduMessageBox.ShowOKCancel("确认恢复默认设置？", "提示", "是", "否");
+            var result = AduMessageBox.ShowOKCancel("确认恢复默认设置？(需要手动保存)", "提示", "是", "否");
             if (result == MessageBoxResult.OK)
             {
                 InitImageConfig(new App.MyConfig());
             }
+        }
+
+        #endregion
+
+        #region 帮助
+
+        private void InitHelpLabel()
+        {
+            HelpLabel.Text = File.ReadAllText("Help.md");
         }
 
         #endregion

@@ -31,13 +31,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="370" Width="*"/>
+            <ColumnDefinition MinWidth="300" Width="*"/>
             <ColumnDefinition MinWidth="340" Width="*"/>
             <ColumnDefinition MinWidth="330" Width="*"/>
         </Grid.ColumnDefinitions>
         <AduSkin:AduFlatButton x:Name="ImportCloudMusicButton" Grid.Row="0" Grid.Column="0" Content="获取网易云" Width="80" Height="30" HorizontalAlignment="Left" Margin="5,5,0,5" Background="{DynamicResource DefaultBrush}" Click="ImportCloudMusicButton_Click"/>
-        <AduSkin:AduFlatButton x:Name="ImportQQMusicButton" Grid.Row="0" Grid.Column="0" Content="获取QQ音乐" Width="80" Height="30" HorizontalAlignment="Left" Margin="90,5,0,5" Background="#1ECD99" Click="ImportQQMusicButton_Click"/>
-        <AduSkin:AduFlatButton x:Name="ClearButton" Grid.Row="0" Grid.Column="0" Content="清空" Width="50" Height="30" HorizontalAlignment="Left" Margin="175,5,0,5" Background="White" Foreground="#FF404040" Click="ClearButton_Click"/>
+        <AduSkin:AduFlatButton x:Name="ImportQQMusicButton" Grid.Row="0" Grid.Column="0" Content="获取QQ音乐" Width="80" Height="30" HorizontalAlignment="Left" Margin="90,5,0,5" Background="#1ECD99" Click="ImportQQMusicButton_Click" Visibility="Collapsed"/>
+        <AduSkin:AduFlatButton x:Name="ClearButton" Grid.Row="0" Grid.Column="0" Content="清空" Width="50" Height="30" HorizontalAlignment="Left" Margin="90,5,0,5" Background="White" Foreground="#FF404040" Click="ClearButton_Click"/>
         <AduSkin:AduCheckBox x:Name="AutoVariantCheckBox" IsChecked="False" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="识别变体" HorizontalAlignment="Right" Margin="0,5,60,5" ></AduSkin:AduCheckBox>
         <AduSkin:AduFlatButton x:Name="ConvertButton" Grid.Row="0" Grid.Column="0" Content="转换" Width="50" Height="30" HorizontalAlignment="Right" Margin="0,5,3,5" Background="{DynamicResource DefaultBrush}" Click="ConvertButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ReadButton" Grid.Row="0" Grid.Column="1" Content="读取" Width="50" Height="30" HorizontalAlignment="Left" Margin="0,0,0,0" Background="{DynamicResource DefaultBrush}" Click="ReadButton_Click"/>
@@ -65,10 +65,10 @@
         <AduSkin:AduFlatButton x:Name="CopyButton" Grid.Row="0" Grid.Column="2" Content="复制" Width="50" Height="30" HorizontalAlignment="Right" Background="{DynamicResource DefaultBrush}" VerticalAlignment="Stretch" Margin="0,5,5,5" Click="CopyButton_Click"/>
         <AduSkin:MetroTextBox x:Name="InputTextBox" Grid.Row="1" Grid.Column="0" Margin="5,0,3,5" MultipleLine="True" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="InputTextBox_PreviewMouseWheel"></AduSkin:MetroTextBox>
         <AduSkin:MetroTextBox x:Name="OutputTextBox" Grid.Row="1" Grid.Column="2" Margin="3,0,5,5" MultipleLine="True" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="OutputTextBox_PreviewMouseWheel"></AduSkin:MetroTextBox>
-        <GridSplitter x:Name="GridSplitter1" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Background="Transparent" ShowsPreview="true" Width="3" Margin="-3,0,0,5" ResizeDirection="Columns" ResizeBehavior="PreviousAndCurrent"/>
-        <GridSplitter x:Name="GridSplitter2" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Background="Transparent" ShowsPreview="true" Width="3" Margin="0,0,0,5"/>
         <control:ScaleLabel x:Name="InputTextBoxScaleLabel" Grid.Row="1" Grid.Column="0" ScaleText="{Binding InputTextBoxScale,ElementName=MainMetroWindow}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,4,6"></control:ScaleLabel>
         <control:ScaleLabel x:Name="EditPanelScaleLabel" Grid.Row="1" Grid.Column="1" ScaleText="{Binding EditPanelScale,ElementName=MainMetroWindow}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,18,6"></control:ScaleLabel>
         <control:ScaleLabel x:Name="OutputTextBoxScaleLabel" Grid.Row="1" Grid.Column="2" ScaleText="{Binding OutputTextBoxScale,ElementName=MainMetroWindow}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"></control:ScaleLabel>
+        <GridSplitter x:Name="GridSplitter1" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Background="Transparent" ShowsPreview="true" Width="4" Margin="-3,0,0,5"/>
+        <GridSplitter x:Name="GridSplitter2" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Background="Transparent" ShowsPreview="true" Width="4" Margin="0,0,-3,5"/>
     </Grid>
 </AduSkin:MetroWindow>

@@ -7,7 +7,7 @@
                      xmlns:AduSkin="clr-namespace:AduSkin.Controls.Metro;assembly=AduSkin"
                      mc:Ignorable="d"
                      BorderBrush="{DynamicResource DefaultBrush}"
-                     Title="设置" Height="350" Width="510" Icon="/favicon.ico" Loaded="MetroWindow_Loaded" ResizeMode="NoResize">
+                     Title="设置" Height="350" Width="510" Icon="/settings.ico"  Loaded="MetroWindow_Loaded" ResizeMode="NoResize">
     <AduSkin:MetroWindow.Resources>
         <Style x:Key="SegmentItemStyle" TargetType="AduSkin:SegmentItem">
             <Setter Property="Padding" Value="0" />
@@ -69,7 +69,7 @@
             <Setter Property="Padding" Value="0" />
             <Setter Property="CornerRadius" Value="0" />
             <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="BorderThickness" Value="0,0,1,0" />
+            <Setter Property="BorderThickness" Value="0,0,0,0" />
             <Setter Property="BorderBrush" Value="#10000000" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="ItemsPanel">
@@ -90,12 +90,12 @@
         <AduSkin:AduNavigationPanel Grid.Row="0" IndicatorPlacement="Left" IndicatorItemContainerStyle="{StaticResource SegmentItemStyle}" IndicatorStyle="{StaticResource SegmentControlStyle}">
             <AduSkin:MetroScrollViewer HorizontalScrollBarVisibility="Disabled">
                 <StackPanel >
-                    <AduSkin:AduGroupBoxNor Header="通用设置" HeaderPadding="10,6">
+                    <AduSkin:AduGroupBoxNor Header="通用设置" HeaderPadding="10,6" BorderThickness="1,0,0,1">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <AduSkin:AduCheckBox x:Name="IsOpenExplorerAfterSaveImageCheckBox" Margin="-5,20,200,20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="生成图片后打开文件夹" FontSize="12px" />
                         </Grid>
                     </AduSkin:AduGroupBoxNor>
-                    <AduSkin:AduGroupBoxNor Header="图片导出设置" HeaderPadding="10,6">
+                    <AduSkin:AduGroupBoxNor Header="图片生成设置" HeaderPadding="10,6" BorderThickness="1,0,0,1">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Label Content="字体" Margin="0,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                             <AduSkin:AduComboBox x:Name="FontFamilyComboBox" Width="230" Height="24" Margin="60,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -113,13 +113,16 @@
                             <AduSkin:MetroTextBox x:Name="PaddingYTextBox" Margin="60,140,0,0" Text="" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             <Label Content="行内间距" Margin="180,140,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                             <AduSkin:MetroTextBox x:Name="PaddingInnerYTextBox" Margin="240,140,0,0" Text="" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                            <AduSkin:AduFlatButton x:Name="DefaultButton" Content="恢复默认" Width="60" Height="30" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="0,180,0,20" Background="Transparent" Foreground="#FF404040" Click="DefaultButton_Click" />
+                            <AduSkin:AduFlatButton x:Name="DefaultButton" Content="恢复默认" Width="60" Height="30" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="230,180,0,20" Background="Transparent" Foreground="#FF666666" Click="DefaultButton_Click" />
                         </Grid>
                     </AduSkin:AduGroupBoxNor>
-                    <AduSkin:AduGroupBoxNor Header="帮助" HeaderPadding="10,6">
-                        <Grid Height="300"></Grid>
+                    <AduSkin:AduGroupBoxNor Header="帮助" HeaderPadding="10,6" BorderThickness="1,0,0,1">
+                        <Grid>
+                            <TextBlock x:Name="HelpLabel" Background="Transparent" TextWrapping="Wrap" Padding="5">
+                            </TextBlock>
+                        </Grid>
                     </AduSkin:AduGroupBoxNor>
-                    <AduSkin:AduGroupBoxNor Header="关于" HeaderPadding="10,6">
+                    <AduSkin:AduGroupBoxNor Header="关于" HeaderPadding="10,6" BorderThickness="1,0,0,1">
                         <Grid>
                             <Image Source="/GitHub-Mark-64px.png" Width="64" Height="64" VerticalAlignment="Top" Margin="0,15,0,0" />
                             <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0">
@@ -219,7 +222,7 @@
                 </StackPanel>
             </AduSkin:MetroScrollViewer>
         </AduSkin:AduNavigationPanel>
-        <GridSplitter Grid.Row="0" Background="#FFDADADA" Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+        <GridSplitter Grid.Row="0" Background="#FFDADADA" Height="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
         <AduSkin:AduFlatButton x:Name="CancelButton" Grid.Row="1" Content="取消" Width="50" Height="30" HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0,0,90,0" Background="White" Foreground="#FF404040" Click="CancelButton_Click"/>
         <AduSkin:AduFlatButton x:Name="SaveButton" Grid.Row="1" Content="保存" Width="50" Height="30" HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0,0,20,0" Background="{DynamicResource DefaultBrush}" Click="SaveButton_Click"/>
     </Grid>

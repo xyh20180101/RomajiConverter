@@ -13,10 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GitHub-Mark-64px.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AduSkin" Version="1.1.1.9" />
     <PackageReference Include="MeCab.DotNet" Version="0.0.40" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -28,6 +24,7 @@
   <ItemGroup>
     <Resource Include="favicon.ico" />
     <Resource Include="GitHub-Mark-64px.png" />
+    <Resource Include="settings.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +39,9 @@
     </None>
     <None Update="customizeDict.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Help.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="variant\kSimplifiedVariant.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
