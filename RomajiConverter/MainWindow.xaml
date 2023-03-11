@@ -44,7 +44,7 @@
         <AduSkin:AduFlatButton x:Name="SaveButton" Grid.Row="0" Grid.Column="1" Content="保存" Width="50" Height="30" HorizontalAlignment="Left" Margin="53,0,0,0" Background="{DynamicResource DefaultBrush}" Click="SaveButton_Click"/>
         <WrapPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="100,0,150,0">
             <AduSkin:AduCheckBox x:Name="EditRomajiCheckBox" Grid.Row="0" Grid.Column="1" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="罗马音" Margin="2" ></AduSkin:AduCheckBox>
-            <AduSkin:AduCheckBox x:Name="EditHiraganaCheckBox" Grid.Row="0" Grid.Column="1" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="片假名" Margin="2" ></AduSkin:AduCheckBox>
+            <AduSkin:AduCheckBox x:Name="EditHiraganaCheckBox" Grid.Row="0" Grid.Column="1" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="平假名" Margin="2" ></AduSkin:AduCheckBox>
         </WrapPanel>
         <AduSkin:AduFlatButton x:Name="ConvertPictureButton" Grid.Row="0" Grid.Column="1" Content="生成图片" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,77,0" Background="{DynamicResource DefaultBrush}" Click="ConvertPictureButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ConvertTextButton" Grid.Row="0" Grid.Column="1" Content="生成文本" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="{DynamicResource DefaultBrush}" Click="ConvertTextButton_Click"/>
