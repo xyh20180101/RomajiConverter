@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="RomajiConverter.Controls.EditableLabelGroup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RomajiConverter.Controls"
+             xmlns:romajiConverter="clr-namespace:RomajiConverter"
+             mc:Ignorable="d"
+             x:Name="Group">
+    <Grid>
+        <StackPanel>
+            <romajiConverter:EditableLabel Text="{Binding Unit.Romaji,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding RomajiVisibility,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MyFontSize="{Binding Path=MyFontSize,Mode=TwoWay,ElementName=Group,UpdateSourceTrigger=PropertyChanged}"></romajiConverter:EditableLabel>
+            <romajiConverter:EditableLabel Text="{Binding Unit.Hiragana,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HiraganaVisibility,ElementName=Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MyFontSize="{Binding Path=MyFontSize,Mode=TwoWay,ElementName=Group,UpdateSourceTrigger=PropertyChanged}"></romajiConverter:EditableLabel>
+            <Label Padding="5,0,5,5" Content="{Binding Unit.Japanese,ElementName=Group,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{Binding Path=MyFontSize,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></Label>
+        </StackPanel>
+    </Grid>
+</UserControl>

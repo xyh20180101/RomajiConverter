@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RomajiConverter.Helper
+namespace RomajiConverter.Extensions
 {
-    public static class StringHelper
+    public static class StringExtension
     {
         public static string RemoveEmptyLine(this string str)
         {
