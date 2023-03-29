@@ -21,12 +21,12 @@ namespace RomajiConverter.Helper
         private static Dictionary<string, string> GetVariantDictionary(string filePath, string variantPath)
         {
             var variantText = File.ReadAllText(variantPath);
-            var variantLines = variantText.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+            var variantLines = variantText.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
             var variantDictionary = variantLines.Select(line => line.Split("\t", StringSplitOptions.RemoveEmptyEntries))
                 .ToDictionary(items => items[0].Split(" ")[0], items => items[0].Split(" ")[1]);
 
             var text = File.ReadAllText(filePath);
-            var lines = text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
             var dictionary = new Dictionary<string, string>();
             foreach (var line in lines)
             {

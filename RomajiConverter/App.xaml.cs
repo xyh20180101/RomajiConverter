@@ -66,6 +66,8 @@ namespace RomajiConverter
                 EditPanelFontSize = 12;
                 OutputTextBoxFontSize = 12;
                 IsOpenExplorerAfterSaveImage = true;
+                LeftParenthesis = "(";
+                RightParenthesis = ")";
 
                 InitImageSetting();
             }
@@ -98,6 +100,10 @@ namespace RomajiConverter
             public double OutputTextBoxFontSize { get; set; }
 
             public bool IsOpenExplorerAfterSaveImage { get; set; }
+
+            public string LeftParenthesis { get; set; }
+
+            public string RightParenthesis { get; set; }
 
             #endregion
 

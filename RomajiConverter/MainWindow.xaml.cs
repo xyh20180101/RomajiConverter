@@ -67,6 +67,8 @@ namespace RomajiConverter
             EditHiraganaCheckBox.Unchecked += EditHiraganaCheckBox_Unchecked;
             EditRomajiCheckBox.Checked += EditRomajiCheckBox_Checked;
             EditRomajiCheckBox.Unchecked += EditRomajiCheckBox_UnChecked;
+            IsOnlyShowKanjiCheckBox.Checked += IsOnlyShowKanjiCheckBox_Checked;
+            IsOnlyShowKanjiCheckBox.Unchecked += IsOnlyShowKanjiCheckBox_Unchecked;
 
             SpaceCheckBox.Checked += ThirdCheckBox_Checked;
             SpaceCheckBox.Unchecked += ThirdCheckBox_Unchecked;
@@ -78,6 +80,8 @@ namespace RomajiConverter
             HiraganaCheckBox.Unchecked += ThirdCheckBox_Unchecked;
             JPCheckBox.Checked += ThirdCheckBox_Checked;
             JPCheckBox.Unchecked += ThirdCheckBox_Unchecked;
+            KanjiHiraganaCheckBox.Checked += ThirdCheckBox_Checked;
+            KanjiHiraganaCheckBox.Unchecked += ThirdCheckBox_Unchecked;
             CHCheckBox.Checked += ThirdCheckBox_Checked;
             CHCheckBox.Unchecked += ThirdCheckBox_Unchecked;
             SimpleRadioButton.Checked += SimpleRadioButton_Checked;
@@ -157,7 +161,21 @@ namespace RomajiConverter
                 {
                     var group = new EditableLabelGroup(unit);
                     group.RomajiVisibility = GetBool(EditRomajiCheckBox.IsChecked) ? Visibility.Visible : Visibility.Collapsed;
-                    group.HiraganaVisibility = GetBool(EditHiraganaCheckBox.IsChecked) ? Visibility.Visible : Visibility.Collapsed;
+                    if (GetBool(EditHiraganaCheckBox.IsChecked) == true)
+                    {
+                        if (GetBool(IsOnlyShowKanjiCheckBox.IsChecked) == true && group.Unit.IsKanji == false)
+                        {
+                            group.HiraganaVisibility = Visibility.Hidden;
+                        }
+                        else
+                        {
+                            group.HiraganaVisibility = Visibility.Visible;
+                        }
+                    }
+                    else
+                    {
+                        group.HiraganaVisibility = Visibility.Collapsed;
+                    }
                     line.Children.Add(group);
                 }
 
@@ -220,7 +238,10 @@ namespace RomajiConverter
 
                 foreach (EditableLabelGroup editableLabelGroup in wrapPanel.Children)
                 {
-                    editableLabelGroup.HiraganaVisibility = Visibility.Visible;
+                    if (GetBool(IsOnlyShowKanjiCheckBox.IsChecked) && !editableLabelGroup.Unit.IsKanji)
+                        editableLabelGroup.HiraganaVisibility = Visibility.Hidden;
+                    else
+                        editableLabelGroup.HiraganaVisibility = Visibility.Visible;
                 }
             }
         }
@@ -238,6 +259,48 @@ namespace RomajiConverter
                 foreach (EditableLabelGroup editableLabelGroup in wrapPanel.Children)
                 {
                     editableLabelGroup.HiraganaVisibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void IsOnlyShowKanjiCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (EditHiraganaCheckBox.IsChecked == false)
+                return;
+
+            foreach (object children in EditPanel.Children)
+            {
+                WrapPanel wrapPanel;
+                if (children.GetType() == typeof(WrapPanel))
+                    wrapPanel = (WrapPanel)children;
+                else
+                    continue;
+
+                foreach (EditableLabelGroup editableLabelGroup in wrapPanel.Children)
+                {
+                    if (editableLabelGroup.Unit.IsKanji == false)
+                        editableLabelGroup.HiraganaVisibility = Visibility.Hidden;
+                }
+            }
+        }
+
+        private void IsOnlyShowKanjiCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (EditHiraganaCheckBox.IsChecked == false)
+                return;
+
+            foreach (object children in EditPanel.Children)
+            {
+                WrapPanel wrapPanel;
+                if (children.GetType() == typeof(WrapPanel))
+                    wrapPanel = (WrapPanel)children;
+                else
+                    continue;
+
+                foreach (EditableLabelGroup editableLabelGroup in wrapPanel.Children)
+                {
+                    if (editableLabelGroup.Unit.IsKanji == false)
+                        editableLabelGroup.HiraganaVisibility = Visibility.Visible;
                 }
             }
         }
@@ -274,7 +337,27 @@ namespace RomajiConverter
                 if (GetBool(HiraganaCheckBox.IsChecked))
                     output.AppendLine(GetString(item.Units.Select(p => p.Hiragana)));
                 if (GetBool(JPCheckBox.IsChecked))
-                    output.AppendLine(item.Japanese);
+                {
+                    if (GetBool(KanjiHiraganaCheckBox.IsChecked))
+                    {
+                        var japanese = item.Japanese;
+                        var leftParenthesis = ((App)Application.Current).Config.LeftParenthesis;
+                        var rightParenthesis = ((App)Application.Current).Config.RightParenthesis;
+
+                        var kanjiUnitList = item.Units.Where(p => p.IsKanji);
+                        foreach (var kanjiUnit in kanjiUnitList)
+                        {
+                            var kanjiIndex = japanese.IndexOf(kanjiUnit.Japanese);
+                            var hiraganaIndex = kanjiIndex + kanjiUnit.Japanese.Length;
+                            japanese = japanese.Insert(hiraganaIndex, $"{leftParenthesis}{kanjiUnit.Hiragana}{rightParenthesis}");
+                        }
+                        output.AppendLine(japanese);
+                    }
+                    else
+                    {
+                        output.AppendLine(item.Japanese);
+                    }
+                }
                 if (GetBool(CHCheckBox.IsChecked) && !string.IsNullOrWhiteSpace(item.Chinese))
                     output.AppendLine(item.Chinese);
                 if (GetBool(NewLineCheckBox.IsChecked) && i < _convertedLineList.Count - 1)
@@ -327,7 +410,16 @@ namespace RomajiConverter
                         if (GetBool(EditRomajiCheckBox.IsChecked))
                             renderUnit.Add(unit.Romaji);
                         if (GetBool(EditHiraganaCheckBox.IsChecked))
-                            renderUnit.Add(unit.Hiragana);
+                        {
+                            if (GetBool(IsOnlyShowKanjiCheckBox.IsChecked))
+                            {
+                                renderUnit.Add(unit.IsKanji ? unit.Hiragana : " ");
+                            }
+                            else
+                            {
+                                renderUnit.Add(unit.Hiragana);
+                            }
+                        }
                         renderUnit.Add(unit.Japanese);
                         renderLine.Add(renderUnit.ToArray());
                     }
@@ -382,6 +474,7 @@ namespace RomajiConverter
                     SaveButton.Visibility = Visibility.Visible;
                     EditHiraganaCheckBox.Visibility = Visibility.Visible;
                     EditRomajiCheckBox.Visibility = Visibility.Visible;
+                    IsOnlyShowKanjiCheckBox.Visibility = Visibility.Visible;
                     ConvertPictureButton.Visibility = Visibility.Visible;
                     ConvertTextButton.Visibility = Visibility.Visible;
                     EditBorder.Visibility = Visibility.Visible;
@@ -392,6 +485,7 @@ namespace RomajiConverter
                     SaveButton.Visibility = Visibility.Collapsed;
                     EditHiraganaCheckBox.Visibility = Visibility.Collapsed;
                     EditRomajiCheckBox.Visibility = Visibility.Collapsed;
+                    IsOnlyShowKanjiCheckBox.Visibility = Visibility.Collapsed;
                     ConvertPictureButton.Visibility = Visibility.Collapsed;
                     ConvertTextButton.Visibility = Visibility.Collapsed;
                     EditBorder.Visibility = Visibility.Collapsed;

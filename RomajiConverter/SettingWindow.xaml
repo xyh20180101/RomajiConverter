@@ -93,6 +93,9 @@
                     <AduSkin:AduGroupBoxNor Header="通用设置" HeaderPadding="10,6" BorderThickness="1,0,0,1">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <AduSkin:AduCheckBox x:Name="IsOpenExplorerAfterSaveImageCheckBox" Margin="-5,20,200,20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="生成图片后打开文件夹" FontSize="12px" />
+                            <Label Content="括号符号" Margin="0,60,0,20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <AduSkin:MetroTextBox x:Name="LeftParenthesisTextBox" Margin="60,60,0,0" Text="" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <AduSkin:MetroTextBox x:Name="RightParenthesisTextBox" Margin="100,60,0,0" Text="" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                         </Grid>
                     </AduSkin:AduGroupBoxNor>
                     <AduSkin:AduGroupBoxNor Header="图片生成设置" HeaderPadding="10,6" BorderThickness="1,0,0,1">

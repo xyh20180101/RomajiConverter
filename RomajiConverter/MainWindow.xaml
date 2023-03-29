@@ -32,7 +32,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="300" Width="*"/>
-            <ColumnDefinition MinWidth="340" Width="*"/>
+            <ColumnDefinition MinWidth="340" Width="1.2*"/>
             <ColumnDefinition MinWidth="330" Width="*"/>
         </Grid.ColumnDefinitions>
         <AduSkin:AduFlatButton x:Name="ImportCloudMusicButton" Grid.Row="0" Grid.Column="0" Content="获取网易云" Width="80" Height="30" HorizontalAlignment="Left" Margin="5,5,0,5" Background="{DynamicResource DefaultBrush}" Click="ImportCloudMusicButton_Click"/>
@@ -45,6 +45,7 @@
         <WrapPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="100,0,150,0">
             <AduSkin:AduCheckBox x:Name="EditRomajiCheckBox" Grid.Row="0" Grid.Column="1" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="罗马音" Margin="2" ></AduSkin:AduCheckBox>
             <AduSkin:AduCheckBox x:Name="EditHiraganaCheckBox" Grid.Row="0" Grid.Column="1" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="平假名" Margin="2" ></AduSkin:AduCheckBox>
+            <AduSkin:AduCheckBox x:Name="IsOnlyShowKanjiCheckBox" Grid.Row="0" Grid.Column="1" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="仅汉字假名" Margin="2" ></AduSkin:AduCheckBox>
         </WrapPanel>
         <AduSkin:AduFlatButton x:Name="ConvertPictureButton" Grid.Row="0" Grid.Column="1" Content="生成图片" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,77,0" Background="{DynamicResource DefaultBrush}" Click="ConvertPictureButton_Click"/>
         <AduSkin:AduFlatButton x:Name="ConvertTextButton" Grid.Row="0" Grid.Column="1" Content="生成文本" Width="70" Height="30" HorizontalAlignment="Right" Margin="0,0,3,0" Background="{DynamicResource DefaultBrush}" Click="ConvertTextButton_Click"/>
@@ -60,6 +61,7 @@
             <AduSkin:AduCheckBox x:Name="RomajiCheckBox" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="罗马音" Margin="2" ></AduSkin:AduCheckBox>
             <AduSkin:AduCheckBox x:Name="HiraganaCheckBox" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="平假名" Margin="2" ></AduSkin:AduCheckBox>
             <AduSkin:AduCheckBox x:Name="JPCheckBox" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="日文" Margin="2" ></AduSkin:AduCheckBox>
+            <AduSkin:AduCheckBox x:Name="KanjiHiraganaCheckBox" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="汉字假名" Margin="2" ></AduSkin:AduCheckBox>
             <AduSkin:AduCheckBox x:Name="CHCheckBox" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource DefaultBrush}" Content="中文" Margin="2" ></AduSkin:AduCheckBox>
         </WrapPanel>
         <AduSkin:AduFlatButton x:Name="CopyButton" Grid.Row="0" Grid.Column="2" Content="复制" Width="50" Height="30" HorizontalAlignment="Right" Background="{DynamicResource DefaultBrush}" VerticalAlignment="Stretch" Margin="0,5,5,5" Click="CopyButton_Click"/>

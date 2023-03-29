@@ -8,11 +8,12 @@ namespace RomajiConverter.Models
 {
     public class ConvertedUnit : INotifyPropertyChanged
     {
-        public ConvertedUnit(string japanese, string hiragana, string romaji)
+        public ConvertedUnit(string japanese, string hiragana, string romaji, bool isKanji)
         {
             Japanese = japanese;
             Romaji = romaji;
             Hiragana = hiragana;
+            IsKanji = isKanji;
         }
 
         private string _japanese;
@@ -46,6 +47,17 @@ namespace RomajiConverter.Models
             {
                 _hiragana = value;
                 OnPropertyChanged("Hiragana");
+            }
+        }
+
+        private bool _isKanji;
+        public bool IsKanji
+        {
+            get => _isKanji;
+            set
+            {
+                _isKanji = value;
+                OnPropertyChanged("IsKanji");
             }
         }
 

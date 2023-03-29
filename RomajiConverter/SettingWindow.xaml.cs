@@ -30,6 +30,8 @@ namespace RomajiConverter
         private void InitAllConfig(App.MyConfig config)
         {
             IsOpenExplorerAfterSaveImageCheckBox.IsChecked = config.IsOpenExplorerAfterSaveImage;
+            LeftParenthesisTextBox.Text = config.LeftParenthesis;
+            RightParenthesisTextBox.Text = config.RightParenthesis;
 
             FontFamilyComboBox.SelectedValue = config.FontFamilyName;
             FontPixelSizeTextBox.Text = config.FontPixelSize.ToString();
@@ -46,6 +48,8 @@ namespace RomajiConverter
             var config = ((App)Application.Current).Config;
 
             config.IsOpenExplorerAfterSaveImage = IsOpenExplorerAfterSaveImageCheckBox.IsChecked == true;
+            config.LeftParenthesis = LeftParenthesisTextBox.Text;
+            config.RightParenthesis = RightParenthesisTextBox.Text;
 
             config.FontFamilyName = (string)FontFamilyComboBox.SelectedValue;
             config.FontPixelSize = int.Parse(FontPixelSizeTextBox.Text);

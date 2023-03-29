@@ -79,7 +79,7 @@ namespace RomajiConverter.Helper
                 {
                     if (IsEnglish(sentence))
                     {
-                        multiUnits.Add(new[] { new ConvertedUnit(sentence, sentence, sentence) });
+                        multiUnits.Add(new[] { new ConvertedUnit(sentence, sentence, sentence, false) });
                         continue;
                     }
                     ConvertedUnit[] units = SentenceToRomaji(sentence);
@@ -230,32 +230,33 @@ namespace RomajiConverter.Helper
                     if (TryCustomConvert(item.Surface, out var customResult))
                     {
                         //用户自定义词典
-                        result.Add(new ConvertedUnit(item.Surface, customResult, WanaKana.ToRomaji(customResult)));
+                        result.Add(new ConvertedUnit(item.Surface, customResult, WanaKana.ToRomaji(customResult), true));
                     }
                     else if (features.Length > 0 && features[0] != "助詞" && IsJapanese(item.Surface))
                     {
                         //纯假名
-                        result.Add(new ConvertedUnit(item.Surface, KanaConverter.ToHiragana(item.Surface), WanaKana.ToRomaji(item.Surface)));
+                        result.Add(new ConvertedUnit(item.Surface, KanaConverter.ToHiragana(item.Surface), WanaKana.ToRomaji(item.Surface), false));
                     }
                     else if (features.Length <= 6 || new string[] { "補助記号" }.Contains(features[0]))
                     {
                         //标点符号
-                        result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface));
+                        result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface, false));
                     }
                     else if (IsEnglish(item.Surface))
                     {
                         //英文
-                        result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface));
+                        result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface, false));
                     }
                     else
                     {
-                        //汉字
-                        result.Add(new ConvertedUnit(item.Surface, KanaConverter.ToHiragana(features[ChooseIndexByType(features[0])]), WanaKana.ToRomaji(features[ChooseIndexByType(features[0])])));
+                        //汉字或助词
+                        var isKanji = !IsJapanese(item.Surface);
+                        result.Add(new ConvertedUnit(item.Surface, KanaConverter.ToHiragana(features[ChooseIndexByType(features[0])]), WanaKana.ToRomaji(features[ChooseIndexByType(features[0])]), isKanji));
                     }
                 }
                 else if (item.Stat != MeCabNodeStat.Bos && item.Stat != MeCabNodeStat.Eos)
                 {
-                    result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface));
+                    result.Add(new ConvertedUnit(item.Surface, item.Surface, item.Surface, false));
                 }
             }
 
