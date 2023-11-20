@@ -9,12 +9,13 @@
     <Authors>WL</Authors>
     <Product />
     <PackageProjectUrl>https://github.com/xyh20180101/RomajiConverter</PackageProjectUrl>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AduSkin" Version="1.1.1.9" />
     <PackageReference Include="MeCab.DotNet" Version="0.0.40" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NTextCat" Version="0.3.65" />
     <PackageReference Include="Opportunity.LrcParser" Version="1.0.4" />

@@ -1,9 +1,11 @@
 # RomajiConverter
 WPF RomajiConverter
 
-**需安装.net core 3.1框架**
+**如果你使用的是win10以上系统，推荐使用新版本应用[RomajiConverter.WinUI](https://github.com/xyh20180101/RomajiConverter.WinUI)，此版本将会在跨平台版本开发完成后停止更新**
 
 ![](https://raw.githubusercontent.com/xyh20180101/RomajiConverter/main/1.png)
+
+下载见[release](https://github.com/xyh20180101/RomajiConverter/releases)，选择框架依赖版需要下载[.net core 3.1桌面运行时](https://dotnet.microsoft.com/zh-cn/download/dotnet/3.1)，独立版则不需要
 
 ## 功能
 - 将假名、汉字转换为罗马音
@@ -28,6 +30,9 @@ WPF RomajiConverter
 - 1.0.6版本已加入自动简繁变体处理，可解决部分该类问题，但目前发现unihan-database有部分数据仍不是有效的日文字符，所以仍需要手动解决该类错误
 
 ## 更新日志
+
+### 1.1.2
+- 新增支持网易云音乐3.0客户端歌词获取
 
 ### 1.1.1
 - 新增仅显示汉字的平假名功能(包括编辑界面、生成图片、生成文本)
