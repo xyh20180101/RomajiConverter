@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
+using System;
 
-namespace RomajiConverter.Extensions
+namespace RomajiConverter.Core.Extensions
 {
     public static class StringExtension
     {
@@ -16,7 +14,7 @@ namespace RomajiConverter.Extensions
 
         public static string[] LineToUnits(this string str)
         {
-            return str.Split(new char[] { ' ', '　' }, StringSplitOptions.RemoveEmptyEntries);
+            return str.Split(new[] { ' ', '　' }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

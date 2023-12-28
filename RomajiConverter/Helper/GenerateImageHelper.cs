@@ -6,7 +6,7 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Media;
 using RomajiConverter.Extensions;
-using RomajiConverter.Models;
+using RomajiConverter.Core.Models;
 using Color = System.Drawing.Color;
 
 namespace RomajiConverter.Helper

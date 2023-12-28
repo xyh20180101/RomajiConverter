@@ -15,7 +15,8 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using RomajiConverter.Controls;
 using RomajiConverter.Helper;
-using RomajiConverter.Models;
+using RomajiConverter.Core.Helpers;
+using RomajiConverter.Core.Models;
 using Clipboard = System.Windows.Clipboard;
 
 namespace RomajiConverter
@@ -141,7 +142,7 @@ namespace RomajiConverter
 
         private void Convert()
         {
-            _convertedLineList = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(SpaceCheckBox.IsChecked), GetBool(AutoVariantCheckBox.IsChecked));
+            _convertedLineList = RomajiHelper.ToRomaji(InputTextBox.Text, GetBool(AutoVariantCheckBox.IsChecked));
 
             if (IsDetailMode)
                 RenderEditPanel();

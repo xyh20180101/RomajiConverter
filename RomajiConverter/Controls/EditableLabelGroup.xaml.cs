@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using RomajiConverter.Models;
+using RomajiConverter.Core.Models;
 
 namespace RomajiConverter.Controls
 {
