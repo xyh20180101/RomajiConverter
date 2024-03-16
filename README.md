@@ -1,7 +1,7 @@
 # RomajiConverter
 WPF RomajiConverter
 
-**如果你使用的是win10以上系统，推荐使用新版本应用[RomajiConverter.WinUI](https://github.com/xyh20180101/RomajiConverter.WinUI)，此版本将会在跨平台版本开发完成后停止更新**
+**！！！该项目不再更新，如果你使用win10以上系统，请使用新版本应用[RomajiConverter.WinUI](https://github.com/xyh20180101/RomajiConverter.WinUI)；如果你使用Android系统，请使用移动端应用[RomajiConverter.App](https://github.com/xyh20180101/RomajiConverter.App)**
 
 ![](https://raw.githubusercontent.com/xyh20180101/RomajiConverter/main/1.png)
 
